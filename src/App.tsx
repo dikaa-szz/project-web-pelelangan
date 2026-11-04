@@ -36,10 +36,10 @@ const LiveRedirect: React.FC = () => {
   }, [navigate])
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+    <div className="min-h-screen bg-[#08090b] flex items-center justify-center text-[#9e9a90] font-mono text-xs">
       <div className="text-center space-y-3">
-        <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p className="text-xs">Mencari sesi lelang live terdekat...</p>
+        <div className="w-8 h-8 border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto"></div>
+        <p className="uppercase tracking-widest">[ MENCARI SESI LELANG LIVE AKTIF... ]</p>
       </div>
     </div>
   )
@@ -54,8 +54,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[#08090b] flex items-center justify-center text-[#9e9a90] font-mono text-xs">
+        <div className="w-8 h-8 border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto"></div>
       </div>
     )
   }
@@ -71,54 +71,116 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
   return <>{children}</>
 }
 
+// Public Layout Wrapper (with Public Navbar & Public Footer)
+const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] flex flex-col font-body selection:bg-[#ff5500] selection:text-black">
+      <Navbar />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  )
+}
+
 export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: '#0f172a',
-                color: '#f8fafc',
-                border: '1px solid #1e293b',
-                borderRadius: '0.75rem',
-                fontSize: '0.875rem',
-              },
-            }}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: '#0f1115',
+              color: '#e2dfd8',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '0px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+            },
+          }}
+        />
+        <Routes>
+          {/* Admin Backoffice Portal Route - Completely Separate Layout (No Public Navbar/Footer) */}
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
           />
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/vehicle/:id" element={<VehicleDetail />} />
-              <Route path="/auction/:id/live" element={<LiveRoom />} />
-              <Route path="/live" element={<LiveRedirect />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+
+          {/* Public & Customer Routes - Uses Public Layout */}
+          <Route
+            path="/"
+            element={
+              <PublicLayout>
+                <Home />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/catalog"
+            element={
+              <PublicLayout>
+                <Catalog />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/vehicle/:id"
+            element={
+              <PublicLayout>
+                <VehicleDetail />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/auction/:id/live"
+            element={
+              <PublicLayout>
+                <LiveRoom />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/live"
+            element={
+              <PublicLayout>
+                <LiveRedirect />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicLayout>
+                <Login />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicLayout>
+                <Register />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <PublicLayout>
+                  <Dashboard />
+                </PublicLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   )
