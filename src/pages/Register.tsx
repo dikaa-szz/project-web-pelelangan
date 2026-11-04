@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Gavel, Mail, Lock, User, Phone, Building } from 'lucide-react'
+import { Mail, Lock, User, Phone, Building, ArrowRight } from 'lucide-react'
 
 export const Register: React.FC = () => {
   const { register } = useAuth()
@@ -35,139 +35,143 @@ export const Register: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 py-12">
+    <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] flex items-center justify-center p-4 py-16 font-mono">
       <div className="w-full max-w-lg space-y-6">
+        
+        {/* Header */}
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-              <Gavel className="w-6 h-6" />
+            <div className="w-10 h-10 bg-[#ff5500] text-black font-extrabold text-sm flex items-center justify-center tracking-tighter shadow-[0_0_20px_rgba(255,85,0,0.35)]">
+              AB
             </div>
           </Link>
-          <h1 className="text-2xl font-black text-white">Daftar Akun Baru</h1>
-          <p className="text-xs text-slate-400">Pilih peran akun Anda untuk bergabung dalam ekosistem lelang.</p>
+          <div className="text-[10px] text-[#ff5500] uppercase tracking-widest">[ REGISTRASI IDENTITAS // AUTOBID ]</div>
+          <h1 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+            Pendaftaran Akun Baru
+          </h1>
+          <p className="text-xs text-[#9e9a90] font-body">
+            Pilih klasifikasi peran akun Anda dalam sistem kliring lelang terbuka.
+          </p>
         </div>
 
         {/* Role Toggle Selector */}
-        <div className="grid grid-cols-2 gap-3 p-1.5 rounded-2xl bg-slate-900 border border-slate-800">
+        <div className="grid grid-cols-2 gap-2 p-1 bg-[#0f1115] border border-white/10 text-xs">
           <button
             type="button"
             onClick={() => setRole('buyer')}
-            className={`py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`py-2.5 font-bold uppercase tracking-wider transition-all cursor-pointer ${
               role === 'buyer'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#ff5500] text-black shadow-md'
+                : 'text-[#9e9a90] hover:text-white'
             }`}
           >
-            Peserta Lelang (Pembeli)
+            [ Pembeli / Peserta ]
           </button>
           <button
             type="button"
             onClick={() => setRole('seller')}
-            className={`py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`py-2.5 font-bold uppercase tracking-wider transition-all cursor-pointer ${
               role === 'seller'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#ff5500] text-black shadow-md'
+                : 'text-[#9e9a90] hover:text-white'
             }`}
           >
-            Mitra Penjual / Dealer
+            [ Konsinyor / Dealer ]
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4 shadow-xl">
+        <form onSubmit={handleSubmit} className="p-6 bg-[#0f1115] border border-white/10 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">
-              {role === 'seller' ? 'Nama Penanggung Jawab' : 'Nama Lengkap (Sesuai KTP)'}
+            <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">
+              {role === 'seller' ? 'Nama Penanggung Jawab Resmi' : 'Nama Lengkap (Sesuai KTP)'}
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+              <User className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Budi Santoso"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
               />
             </div>
           </div>
 
           {role === 'seller' && (
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Nama Dealer / Perusahaan</label>
+              <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Nama Dealer / Entitas Usaha</label>
               <div className="relative">
-                <Building className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <Building className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
                 <input
                   type="text"
                   required
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="PT Mobilindo Perkasa"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                  placeholder="PT Auto Maju Berkembang"
+                  className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
                 />
               </div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Email</label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="nama@email.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
-                />
-              </div>
+          <div className="space-y-1.5">
+            <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Alamat Email</label>
+            <div className="relative">
+              <Mail className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="budi@example.com"
+                className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
+              />
             </div>
+          </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Nomor WhatsApp / HP</label>
-              <div className="relative">
-                <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="081234567890"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
-                />
-              </div>
+          <div className="space-y-1.5">
+            <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Nomor Telepon / WhatsApp</label>
+            <div className="relative">
+              <Phone className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
+              <input
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="08123456789"
+                className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Kata Sandi</label>
+              <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Kata Sandi</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
                 <input
                   type="password"
                   required
-                  minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 8 karakter"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                  placeholder="Min. 8 karakter"
+                  className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Konfirmasi Sandi</label>
+              <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Konfirmasi Sandi</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3" />
                 <input
                   type="password"
                   required
-                  minLength={8}
                   value={passwordConfirmation}
                   onChange={(e) => setPasswordConfirmation(e.target.value)}
                   placeholder="Ulangi sandi"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2 bg-[#08090b] border border-white/10 text-xs text-white placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
                 />
               </div>
             </div>
@@ -176,20 +180,22 @@ export const Register: React.FC = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-sm shadow-lg shadow-blue-600/30 transition-all"
+            className="w-full py-3 bg-[#ff5500] hover:bg-[#ff6a1f] disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(255,85,0,0.25)]"
           >
-            {submitting ? 'Mendaftarkan Akun...' : 'Daftar Sekarang'}
+            {submitting ? 'MEMPROSES PENDAFTARAN...' : 'SELESAIKAN PENDAFTARAN'}
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-[#9e9a90]">
           Sudah memiliki akun?{' '}
-          <Link to="/login" className="font-semibold text-blue-400 hover:underline">
-            Masuk Disini
+          <Link to="/login" className="text-[#ff5500] hover:underline font-bold uppercase tracking-wider">
+            [ Masuk ke Akun ]
           </Link>
         </p>
       </div>
     </div>
   )
 }
+
 export default Register

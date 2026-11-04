@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 import { Vehicle } from '../types'
-import { Search, SlidersHorizontal, ShieldCheck } from 'lucide-react'
+import { Search, SlidersHorizontal, ShieldCheck, Gavel, FileText } from 'lucide-react'
 
 export const Catalog: React.FC = () => {
   const [searchParams] = useSearchParams()
@@ -52,50 +52,64 @@ export const Catalog: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-10">
+    <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-black text-white">Katalog Mobil Lelang</h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Temukan mobil bekas tersertifikasi siap lelang dengan laporan inspeksi lengkap dan legalitas terjamin.
-          </p>
+        
+        {/* Header Telemetry */}
+        <div className="mb-10 pb-6 border-b border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] text-[#ff5500] uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 bg-[#ff5500]"></span>
+              [ INDEKS INVENTARIS LOT // TERVERIFIKASI ]
+            </div>
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-[#e2dfd8]">
+              Katalog Lelang Konsinyasi
+            </h1>
+            <p className="text-xs sm:text-sm text-[#9e9a90] font-body max-w-xl">
+              Seluruh kendaraan telah diaudit fisik 175 parameter, bebas klaim tabrakan struktural dan bebas rendaman banjir dengan berkas BPKB terverifikasi.
+            </p>
+          </div>
+
+          <div className="font-mono text-xs text-[#9e9a90] bg-[#0f1115] border border-white/10 px-4 py-2 self-start md:self-auto">
+            <span>TOTAL LOT: </span>
+            <span className="text-white font-bold">{vehicles.length} UNIT</span>
+          </div>
         </div>
 
-        {/* Filter & Search Bar */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 mb-8 space-y-4">
-          <form onSubmit={handleSearchSubmit} className="flex gap-2">
+        {/* Industrial Filter & Search Bar */}
+        <div className="bg-[#0f1115] border border-white/10 p-5 mb-10 space-y-4 font-mono">
+          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Search className="w-4 h-4 text-[#5e5b54] absolute left-3.5 top-3.5" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari berdasarkan merek atau tipe (misal: Honda HR-V, Innova Zenix)..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                placeholder="Pencarian kode lot, tipe, atau merek (misal: HR-V, Pajero, Innova)..."
+                className="w-full pl-10 pr-4 py-2.5 bg-[#08090b] border border-white/10 text-xs text-[#e2dfd8] placeholder-[#5e5b54] focus:outline-none focus:border-[#ff5500] transition-colors"
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-blue-600/20"
+              className="px-6 py-2.5 bg-[#ff5500] hover:bg-[#ff6a1f] text-black font-bold text-xs uppercase tracking-wider transition-colors"
             >
-              Cari
+              Cari Lot
             </button>
           </form>
 
-          {/* Quick Filters */}
-          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-800 text-xs">
-            <span className="flex items-center gap-1 text-slate-400 font-medium">
-              <SlidersHorizontal className="w-3.5 h-3.5" /> Filter Cepat:
+          {/* Quick Filters Strip */}
+          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-white/10 text-xs">
+            <span className="flex items-center gap-1.5 text-[#9e9a90] text-[11px] uppercase">
+              <SlidersHorizontal className="w-3 h-3 text-[#ff5500]" /> Parameter:
             </span>
 
             {/* Brand Filter */}
             <select
               value={brand}
               onChange={(e) => setBrand(e.target.value)}
-              className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 focus:outline-none focus:border-blue-500"
+              className="px-3 py-1.5 bg-[#08090b] border border-white/10 text-xs text-[#e2dfd8] focus:outline-none focus:border-[#ff5500]"
             >
-              <option value="">Semua Merek</option>
+              <option value="">Semua Pabrikan</option>
               <option value="Honda">Honda</option>
               <option value="Toyota">Toyota</option>
               <option value="Mitsubishi">Mitsubishi</option>
@@ -106,10 +120,10 @@ export const Catalog: React.FC = () => {
             <select
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
-              className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 focus:outline-none focus:border-blue-500"
+              className="px-3 py-1.5 bg-[#08090b] border border-white/10 text-xs text-[#e2dfd8] focus:outline-none focus:border-[#ff5500]"
             >
               <option value="">Semua Grade Kondisi</option>
-              <option value="A">Grade A (Sangat Istimewa)</option>
+              <option value="A">Grade A (Koleksi / Istimewa)</option>
               <option value="B">Grade B (Bagus Terawat)</option>
               <option value="C">Grade C (Wajar Pemakaian)</option>
               <option value="D">Grade D (Butuh Rekondisi)</option>
@@ -119,7 +133,7 @@ export const Catalog: React.FC = () => {
             <select
               value={transmission}
               onChange={(e) => setTransmission(e.target.value)}
-              className="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 focus:outline-none focus:border-blue-500"
+              className="px-3 py-1.5 bg-[#08090b] border border-white/10 text-xs text-[#e2dfd8] focus:outline-none focus:border-[#ff5500]"
             >
               <option value="">Semua Transmisi</option>
               <option value="automatic">Automatic (AT / CVT)</option>
@@ -135,9 +149,9 @@ export const Catalog: React.FC = () => {
                   setTransmission('')
                   setSearch('')
                 }}
-                className="text-xs text-rose-400 hover:text-rose-300 font-semibold ml-auto"
+                className="text-xs text-[#ff5500] hover:underline font-bold ml-auto uppercase tracking-wider"
               >
-                Reset Filter
+                [ Reset Filter ]
               </button>
             )}
           </div>
@@ -145,18 +159,26 @@ export const Catalog: React.FC = () => {
 
         {/* Vehicles Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-96 rounded-2xl bg-slate-900 border border-slate-800 animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-mono">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-96 bg-[#0f1115] border border-white/10 animate-pulse p-6 space-y-4">
+                <div className="h-44 bg-white/5"></div>
+                <div className="h-4 bg-white/10 w-3/4"></div>
+                <div className="h-4 bg-white/5 w-1/2"></div>
+              </div>
             ))}
           </div>
         ) : vehicles.length === 0 ? (
-          <div className="p-16 text-center rounded-2xl bg-slate-900/50 border border-slate-800">
-            <p className="text-lg font-bold text-slate-300">Tidak ada mobil yang sesuai dengan filter.</p>
-            <p className="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+          <div className="p-20 text-center border border-dashed border-white/15 bg-[#0f1115] font-mono space-y-3">
+            <p className="text-sm font-bold uppercase text-[#e2dfd8] tracking-wider">
+              Tidak ditemukan unit yang sesuai dengan kriteria filter.
+            </p>
+            <p className="text-xs text-[#9e9a90]">
+              Silakan atur ulang filter pencarian untuk melihat seluruh armada lelang.
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-mono">
             {vehicles.map((vehicle) => {
               const latestAuction = vehicle.latest_auction
               const isLive = latestAuction && ['live', 'extended'].includes(latestAuction.status)
@@ -164,79 +186,82 @@ export const Catalog: React.FC = () => {
               return (
                 <div
                   key={vehicle.id}
-                  className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden hover:border-slate-700 transition-all shadow-md group flex flex-col justify-between"
+                  className="bg-[#0f1115] border border-white/10 hover:border-white/30 transition-all flex flex-col justify-between group"
                 >
                   <div>
-                    {/* Image Area */}
-                    <div className="relative h-56 bg-slate-950 overflow-hidden">
+                    {/* Visual Preview */}
+                    <div className="relative aspect-[16/10] bg-black overflow-hidden border-b border-white/10">
                       <img
                         src={
                           vehicle.primary_image?.image_url ||
                           'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'
                         }
                         alt={vehicle.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale contrast-125 group-hover:grayscale-0"
                       />
-                      <div className="absolute top-3 left-3 flex gap-2">
+                      <div className="absolute top-3 left-3 flex gap-1.5 text-[10px]">
                         <span
-                          className={`px-2.5 py-1 rounded-md text-[11px] font-bold shadow-md ${
+                          className={`px-2 py-0.5 font-bold uppercase ${
                             vehicle.condition_grade === 'A'
-                              ? 'bg-emerald-600 text-white'
+                              ? 'bg-[#d4f728] text-black'
                               : vehicle.condition_grade === 'B'
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-amber-600 text-white'
+                              ? 'bg-[#e2dfd8] text-black'
+                              : 'bg-[#e5a93c] text-black'
                           }`}
                         >
-                          Grade {vehicle.condition_grade}
+                          GRADE {vehicle.condition_grade}
                         </span>
                         {isLive && (
-                          <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-red-600 text-white flex items-center gap-1 shadow-md">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                            LIVE BIDDING
+                          <span className="px-2 py-0.5 bg-[#ff5500] text-black font-extrabold flex items-center gap-1 uppercase">
+                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-ping"></span>
+                            LIVE
                           </span>
                         )}
                       </div>
-                      <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-900/80 backdrop-blur-sm text-slate-300">
+                      <div className="absolute bottom-3 left-3 px-2 py-0.5 text-[10px] bg-black/85 border border-white/15 text-[#9e9a90]">
                         {vehicle.license_plate}
                       </div>
                     </div>
 
-                    {/* Content Area */}
-                    <div className="p-5 space-y-3">
+                    {/* Metadata Specs */}
+                    <div className="p-6 space-y-4">
                       <div>
-                        <h3 className="font-bold text-white text-base line-clamp-1 group-hover:text-blue-400 transition-colors">
+                        <span className="text-[10px] text-[#5e5b54] tracking-widest uppercase block mb-1">
+                          LOT #{vehicle.id.toString().padStart(4, '0')} // {vehicle.brand}
+                        </span>
+                        <h3 className="font-display font-bold text-base text-[#e2dfd8] uppercase line-clamp-1 group-hover:text-[#ff5500] transition-colors">
                           {vehicle.title}
                         </h3>
-                        <p className="text-xs text-slate-400 mt-1">
-                          Tahun {vehicle.year} • {vehicle.transmission} • {vehicle.mileage.toLocaleString('id-ID')} km • {vehicle.color}
+                        <p className="text-xs text-[#9e9a90] mt-1">
+                          {vehicle.year} • {vehicle.transmission} • {vehicle.mileage.toLocaleString('id-ID')} KM • {vehicle.color}
                         </p>
                       </div>
 
-                      {/* Inspection Score pill */}
+                      {/* Inspection Score Pill */}
                       {vehicle.inspection && (
-                        <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between text-xs">
-                          <span className="flex items-center gap-1.5 text-slate-300 font-medium">
-                            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                            Skor Inspeksi:
+                        <div className="p-2.5 bg-[#08090b] border border-white/10 flex items-center justify-between text-xs">
+                          <span className="flex items-center gap-1.5 text-[#9e9a90] text-[11px]">
+                            <ShieldCheck className="w-3.5 h-3.5 text-[#d4f728]" />
+                            SKOR AUDIT 175 TITIK:
                           </span>
-                          <span className="font-extrabold text-emerald-400">
+                          <span className="font-bold text-[#d4f728]">
                             {vehicle.inspection.overall_score}/100
                           </span>
                         </div>
                       )}
 
-                      {/* Pricing Info */}
-                      <div className="pt-2 border-t border-slate-800 flex items-end justify-between">
+                      {/* Valuation */}
+                      <div className="p-3 bg-[#08090b] border border-white/10 flex items-end justify-between">
                         <div>
-                          <p className="text-[10px] text-slate-500 uppercase font-semibold">
-                            {isLive ? 'Harga Live Saat Ini' : 'Harga Dasar Lelang'}
+                          <p className="text-[10px] text-[#5e5b54] uppercase">
+                            {isLive ? 'TAWARAN LIVE SAAT INI' : 'HARGA DASAR LELANG'}
                           </p>
-                          <p className="text-lg font-black text-blue-400">
+                          <p className="text-base font-extrabold text-[#ff5500]">
                             {formatRupiah(latestAuction ? latestAuction.current_price : 0)}
                           </p>
                         </div>
                         {latestAuction && (
-                          <p className="text-xs text-slate-400">
+                          <p className="text-[11px] text-[#9e9a90]">
                             {latestAuction.total_bids} Tawaran
                           </p>
                         )}
@@ -244,19 +269,21 @@ export const Catalog: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="p-5 pt-0 flex gap-2">
+                  {/* Actions */}
+                  <div className="p-6 pt-0 flex gap-2">
                     <Link
                       to={`/vehicle/${vehicle.id}`}
-                      className="flex-1 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-200 text-xs font-semibold text-center transition-colors"
+                      className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/15 text-[#e2dfd8] text-xs font-semibold text-center uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5"
                     >
-                      Detail & Inspeksi
+                      <FileText className="w-3 h-3 text-[#9e9a90]" />
+                      Audit Fisik
                     </Link>
                     {isLive && (
                       <Link
                         to={`/auction/${latestAuction.id}/live`}
-                        className="flex-1 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold text-center transition-colors shadow-md shadow-red-600/20"
+                        className="flex-1 py-2.5 bg-[#ff5500] hover:bg-[#ff6a1f] text-black text-xs font-bold text-center uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(255,85,0,0.25)]"
                       >
+                        <Gavel className="w-3 h-3" />
                         Ikut Live
                       </Link>
                     )}
@@ -270,4 +297,5 @@ export const Catalog: React.FC = () => {
     </div>
   )
 }
+
 export default Catalog

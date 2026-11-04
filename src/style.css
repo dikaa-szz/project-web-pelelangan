@@ -1,7 +1,60 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --color-canvas: #08090b;
+  --color-surface: #0f1115;
+  --color-surface-hover: #16181f;
+  --color-surface-elevated: #1d2028;
+  --color-signal: #ff5500;
+  --color-signal-glow: rgba(255, 85, 0, 0.25);
+  --color-amber-signal: #e5a93c;
+  --color-acid: #d4f728;
+  --color-bone: #e2dfd8;
+  --color-stone: #9e9a90;
+  --color-muted: #5e5b54;
+}
+
 @layer base {
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  * {
+    border-color: rgba(255, 255, 255, 0.08);
   }
+
+  body {
+    background-color: #08090b;
+    color: #e2dfd8;
+    font-family: var(--font-body);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Subtle microdot pattern for editorial / industrial feel */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Hairline borders */
+.hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hairline-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hairline-t {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
