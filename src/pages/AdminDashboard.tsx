@@ -12,7 +12,11 @@ import {
   Plus, 
   ShieldCheck,
   Sparkles,
-  Image as ImageIcon
+  Image as ImageIcon,
+  UploadCloud,
+  X,
+  Star,
+  Link as LinkIcon
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -53,6 +57,59 @@ export const AdminDashboard: React.FC = () => {
   const [vehImageUrl, setVehImageUrl] = useState<string>('')
   const [vehDesc, setVehDesc] = useState<string>('')
   const [isSubmittingVeh, setIsSubmittingVeh] = useState(false)
+  const [photoMode, setPhotoMode] = useState<'upload' | 'url'>('upload')
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setIsUploading(true)
+    try {
+      const formData = new FormData()
+      if (files.length === 1) {
+        formData.append('image', files[0])
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          formData.append('images[]', files[i])
+        }
+      }
+
+      const res = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      if (res.data.images) {
+        const urls = res.data.images.map((img: any) => img.url)
+        setUploadedPhotos((prev) => [...prev, ...urls])
+        toast.success(`${urls.length} foto berhasil diunggah dari perangkat!`)
+      } else if (res.data.url) {
+        setUploadedPhotos((prev) => [...prev, res.data.url])
+        toast.success('Foto berhasil diunggah dari perangkat!')
+      }
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Gagal mengunggah berkas gambar.'
+      toast.error(msg)
+    } finally {
+      setIsUploading(false)
+      e.target.value = ''
+    }
+  }
+
+  const handleRemovePhoto = (indexToRemove: number) => {
+    setUploadedPhotos((prev) => prev.filter((_, idx) => idx !== indexToRemove))
+  }
+
+  const handleSetPrimaryPhoto = (indexToPrimary: number) => {
+    setUploadedPhotos((prev) => {
+      const item = prev[indexToPrimary]
+      const rest = prev.filter((_, idx) => idx !== indexToPrimary)
+      return [item, ...rest]
+    })
+  }
 
   const fetchAdminData = async () => {
     setLoading(true)
@@ -161,12 +218,14 @@ export const AdminDashboard: React.FC = () => {
         condition_grade: vehGrade,
         description: vehDesc,
         seller_id: vehSellerId ? Number(vehSellerId) : undefined,
-        images: [
-          {
-            url: vehImageUrl || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80',
-            is_primary: true,
-          },
-        ],
+        images: uploadedPhotos.length > 0
+          ? uploadedPhotos.map((url, idx) => ({ url, is_primary: idx === 0 }))
+          : [
+              {
+                url: vehImageUrl || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80',
+                is_primary: true,
+              },
+            ],
         inspection: {
           overall_score: Number(vehScore),
           inspector_name: 'Biro Audit AutoBid Resmi',
@@ -185,6 +244,7 @@ export const AdminDashboard: React.FC = () => {
       setVehPlate('')
       setVehDesc('')
       setVehImageUrl('')
+      setUploadedPhotos([])
 
       // Refresh admin data and switch to schedule auction
       await fetchAdminData()
@@ -213,6 +273,7 @@ export const AdminDashboard: React.FC = () => {
       setVehGrade('A')
       setVehScore('98')
       setVehImageUrl('https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80')
+      setUploadedPhotos(['https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80'])
       setVehDesc('Unit simpanan kondisi seperti baru, odometer rendah 4.200 KM, cat full original, exhaust original Brembo brakes.')
     } else if (presetName === 'fortuner') {
       setVehTitle('Toyota Fortuner 2.8 GR Sport 4x4 AT')
@@ -227,6 +288,7 @@ export const AdminDashboard: React.FC = () => {
       setVehGrade('A')
       setVehScore('96')
       setVehImageUrl('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80')
+      setUploadedPhotos(['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80'])
       setVehDesc('Tipe tertinggi 2.8 GR Sport 4x4, rawatan bengkel resmi Toyota, pajak hidup, kaki-kaki senyap.')
     } else if (presetName === 'ioniq') {
       setVehTitle('Hyundai Ioniq 5 Signature Long Range EV')
@@ -241,6 +303,7 @@ export const AdminDashboard: React.FC = () => {
       setVehGrade('A')
       setVehScore('97')
       setVehImageUrl('https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80')
+      setUploadedPhotos(['https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80'])
       setVehDesc('Kendaraan listrik murni, Battery Health 99%, garansi baterai resmi aktif hingga 2031, V2L adapter lengkap.')
     } else if (presetName === 'pajero') {
       setVehTitle('Mitsubishi Pajero Sport Dakar Ultimate 4x2')
@@ -255,6 +318,7 @@ export const AdminDashboard: React.FC = () => {
       setVehGrade('B')
       setVehScore('89')
       setVehImageUrl('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80')
+      setUploadedPhotos(['https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80'])
       setVehDesc('Pajero Sport Dakar pemakaian pribadi terawat, sunroof elektrik aktif, buku servis dan kunci serep lengkap.')
     }
   }
@@ -712,18 +776,149 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Foto URL */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90] flex items-center gap-1.5">
-                  <ImageIcon className="w-3.5 h-3.5 text-[#ff5500]" /> URL Foto Utama Kendaraan
-                </label>
-                <input
-                  type="url"
-                  value={vehImageUrl}
-                  onChange={(e) => setVehImageUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/... (atau gunakan preset di atas)"
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500]"
-                />
+              {/* Foto Kendaraan (Upload Perangkat / URL) */}
+              <div className="space-y-3 pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
+                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90] flex items-center gap-1.5 font-bold">
+                    <ImageIcon className="w-3.5 h-3.5 text-[#d4f728]" /> Foto Galeri Kendaraan *
+                  </label>
+                  
+                  {/* Mode Selector Toggle */}
+                  <div className="flex items-center gap-1 bg-[#060709] p-1 border border-white/10 text-[10px]">
+                    <button
+                      type="button"
+                      onClick={() => setPhotoMode('upload')}
+                      className={`px-2.5 py-1 uppercase font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                        photoMode === 'upload'
+                          ? 'bg-[#d4f728] text-black'
+                          : 'text-[#9e9a90] hover:text-white'
+                      }`}
+                    >
+                      <UploadCloud className="w-3 h-3" />
+                      Upload dari Perangkat
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPhotoMode('url')}
+                      className={`px-2.5 py-1 uppercase font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                        photoMode === 'url'
+                          ? 'bg-[#d4f728] text-black'
+                          : 'text-[#9e9a90] hover:text-white'
+                      }`}
+                    >
+                      <LinkIcon className="w-3 h-3" />
+                      Input URL Gambar
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mode A: Upload dari Perangkat (Lokal Komputer/HP) */}
+                {photoMode === 'upload' && (
+                  <div className="space-y-3">
+                    {/* File Dropzone Box */}
+                    <label className={`block border-2 border-dashed p-6 text-center transition-colors cursor-pointer ${
+                      isUploading 
+                        ? 'border-[#d4f728] bg-[#d4f728]/5' 
+                        : 'border-white/15 hover:border-[#d4f728] bg-[#060709] hover:bg-white/5'
+                    }`}>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        onChange={handleFileUpload}
+                        disabled={isUploading}
+                        className="hidden"
+                      />
+                      <div className="space-y-2">
+                        <UploadCloud className={`w-8 h-8 mx-auto ${isUploading ? 'text-[#d4f728] animate-bounce' : 'text-[#9e9a90]'}`} />
+                        <div className="text-xs text-white font-bold uppercase tracking-wider">
+                          {isUploading ? 'Sedang Mengunggah Foto ke Server...' : 'Klik untuk Pilih Foto dari Perangkat Anda'}
+                        </div>
+                        <p className="text-[10px] text-[#5e5b54]">
+                          Format didukung: JPG, PNG, WEBP (Bisa pilih beberapa foto sekaligus, Maks 10MB per foto)
+                        </p>
+                      </div>
+                    </label>
+
+                    {/* Uploaded Photos Preview Grid */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="space-y-2 pt-2">
+                        <div className="text-[10px] text-[#9e9a90] flex items-center justify-between">
+                          <span>TOTAL FOTO TERUNGGAH: <strong className="text-white">{uploadedPhotos.length} Foto</strong></span>
+                          <span className="text-[#d4f728]">*Foto pertama otomatis menjadi foto sampul lelang</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          {uploadedPhotos.map((url, idx) => (
+                            <div key={idx} className="relative aspect-[4/3] bg-black border border-white/10 group overflow-hidden">
+                              <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" />
+                              
+                              {/* Primary Badge */}
+                              {idx === 0 ? (
+                                <div className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-[#d4f728] text-black font-extrabold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-md">
+                                  <Star className="w-2.5 h-2.5 fill-black" />
+                                  SAMPUL
+                                </div>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSetPrimaryPhoto(idx)}
+                                  className="absolute top-1.5 left-1.5 px-1.5 py-0.5 bg-black/80 hover:bg-[#d4f728] hover:text-black text-[9px] text-[#9e9a90] border border-white/20 uppercase transition-colors cursor-pointer"
+                                >
+                                  Jadikan Sampul
+                                </button>
+                              )}
+
+                              {/* Remove Button */}
+                              <button
+                                type="button"
+                                onClick={() => handleRemovePhoto(idx)}
+                                title="Hapus foto ini"
+                                className="absolute top-1.5 right-1.5 p-1 bg-black/80 hover:bg-rose-600 text-white border border-white/20 transition-colors cursor-pointer"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+
+                          {/* Add More Tile */}
+                          <label className="border border-dashed border-white/20 hover:border-[#d4f728] aspect-[4/3] flex flex-col items-center justify-center text-center p-2 cursor-pointer bg-white/5 hover:bg-white/10 transition-colors">
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/png, image/jpeg, image/jpg, image/webp"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                            />
+                            <Plus className="w-5 h-5 text-[#9e9a90] mb-1" />
+                            <span className="text-[10px] text-white font-bold uppercase">+ Tambah Foto</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Mode B: Input Link URL Gambar */}
+                {photoMode === 'url' && (
+                  <div className="space-y-3">
+                    <input
+                      type="url"
+                      value={vehImageUrl}
+                      onChange={(e) => setVehImageUrl(e.target.value)}
+                      placeholder="https://images.unsplash.com/... (atau gunakan tombol preset di kanan atas)"
+                      className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    />
+                    {vehImageUrl && (
+                      <div className="w-40 aspect-[4/3] bg-black border border-white/10 overflow-hidden relative">
+                        <img src={vehImageUrl} alt="Pratinjau" className="w-full h-full object-cover" />
+                        <span className="absolute bottom-1 left-1 px-1.5 py-0.2 bg-black/80 text-[9px] text-[#9e9a90]">
+                          Pratinjau URL
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Deskripsi */}
