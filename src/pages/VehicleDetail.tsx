@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import api from '../services/api'
 import { Vehicle } from '../types'
-import { ShieldCheck, CheckCircle2, Gavel, FileText, ArrowLeft, Disc3 } from 'lucide-react'
+import { ShieldCheck, CheckCircle2, Gavel, FileText, ArrowLeft, Disc3, Clock } from 'lucide-react'
 
 export const VehicleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -64,7 +64,19 @@ export const VehicleDetail: React.FC = () => {
     : [{ id: 0, vehicle_id: vehicle.id, image_url: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80', is_primary: true, order: 0 }]
 
   const activeAuction = vehicle.latest_auction
-  const isLive = activeAuction && ['live', 'extended'].includes(activeAuction.status)
+  const nowTime = Date.now()
+  const isLive = Boolean(
+    activeAuction && (
+      ['live', 'extended'].includes(activeAuction.status) ||
+      (new Date(activeAuction.start_time).getTime() <= nowTime && new Date(activeAuction.end_time).getTime() > nowTime)
+    )
+  )
+  const isUpcoming = Boolean(
+    activeAuction && !isLive && (
+      activeAuction.status === 'scheduled' ||
+      new Date(activeAuction.start_time).getTime() > nowTime
+    )
+  )
 
   return (
     <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] py-10 font-mono">
@@ -99,6 +111,11 @@ export const VehicleDetail: React.FC = () => {
                   LIVE BIDDING AKTIF
                 </span>
               )}
+              {isUpcoming && (
+                <span className="px-2 py-0.5 bg-[#e5a93c] text-black font-extrabold flex items-center gap-1 uppercase">
+                  LELANG TERJADWAL
+                </span>
+              )}
             </div>
 
             <h1 className="font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-white">
@@ -124,11 +141,18 @@ export const VehicleDetail: React.FC = () => {
                   to={`/auction/${activeAuction.id}/live`}
                   className="px-6 py-2.5 bg-[#ff5500] hover:bg-[#ff6a1f] text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(255,85,0,0.3)]"
                 >
-                  <Gavel className="w-3.5 h-3.5" /> Masuk Live
+                  <Gavel className="w-3.5 h-3.5" /> Masuk Live Sekarang
+                </Link>
+              ) : isUpcoming ? (
+                <Link
+                  to={`/auction/${activeAuction.id}/live`}
+                  className="px-6 py-2.5 bg-white/10 hover:bg-[#ff5500] hover:text-black text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all"
+                >
+                  <Clock className="w-3.5 h-3.5 text-[#e5a93c]" /> Ruang Tunggu Lelang
                 </Link>
               ) : (
                 <div className="px-4 py-2 bg-white/5 border border-white/10 text-[#9e9a90] text-xs uppercase">
-                  Jadwal Menunggu
+                  Lelang Selesai
                 </div>
               )}
             </div>

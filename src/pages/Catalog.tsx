@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 import { Vehicle } from '../types'
-import { Search, SlidersHorizontal, ShieldCheck, Gavel, FileText } from 'lucide-react'
+import { Search, SlidersHorizontal, ShieldCheck, Gavel, FileText, Clock } from 'lucide-react'
 
 export const Catalog: React.FC = () => {
   const [searchParams] = useSearchParams()
@@ -181,7 +181,19 @@ export const Catalog: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-mono">
             {vehicles.map((vehicle) => {
               const latestAuction = vehicle.latest_auction
-              const isLive = latestAuction && ['live', 'extended'].includes(latestAuction.status)
+              const nowTime = Date.now()
+              const isLive = Boolean(
+                latestAuction && (
+                  ['live', 'extended'].includes(latestAuction.status) ||
+                  (new Date(latestAuction.start_time).getTime() <= nowTime && new Date(latestAuction.end_time).getTime() > nowTime)
+                )
+              )
+              const isUpcoming = Boolean(
+                latestAuction && !isLive && (
+                  latestAuction.status === 'scheduled' ||
+                  new Date(latestAuction.start_time).getTime() > nowTime
+                )
+              )
 
               return (
                 <div
@@ -215,6 +227,11 @@ export const Catalog: React.FC = () => {
                           <span className="px-2 py-0.5 bg-[#ff5500] text-black font-extrabold flex items-center gap-1 uppercase">
                             <span className="w-1.5 h-1.5 bg-black rounded-full animate-ping"></span>
                             LIVE
+                          </span>
+                        )}
+                        {isUpcoming && (
+                          <span className="px-2 py-0.5 bg-[#e5a93c] text-black font-extrabold flex items-center gap-1 uppercase">
+                            TERJADWAL
                           </span>
                         )}
                       </div>
@@ -278,13 +295,22 @@ export const Catalog: React.FC = () => {
                       <FileText className="w-3 h-3 text-[#9e9a90]" />
                       Audit Fisik
                     </Link>
-                    {isLive && (
+                    {isLive && latestAuction && (
                       <Link
                         to={`/auction/${latestAuction.id}/live`}
                         className="flex-1 py-2.5 bg-[#ff5500] hover:bg-[#ff6a1f] text-black text-xs font-bold text-center uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(255,85,0,0.25)]"
                       >
                         <Gavel className="w-3 h-3" />
                         Ikut Live
+                      </Link>
+                    )}
+                    {isUpcoming && latestAuction && (
+                      <Link
+                        to={`/auction/${latestAuction.id}/live`}
+                        className="flex-1 py-2.5 bg-white/10 hover:bg-[#ff5500] hover:text-black text-white text-xs font-bold text-center uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <Clock className="w-3 h-3 text-[#e5a93c]" />
+                        Ruang Tunggu
                       </Link>
                     )}
                   </div>

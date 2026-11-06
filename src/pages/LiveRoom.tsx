@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import api from '../services/api'
 import echo from '../services/echo'
@@ -10,7 +10,9 @@ import toast from 'react-hot-toast'
 interface LiveRoomData {
   auction: Auction
   is_live: boolean
+  is_upcoming?: boolean
   server_time: string
+  start_time?: string
   end_time: string
   time_remaining_seconds: number
   min_next_bid: number
@@ -46,41 +48,68 @@ export const LiveRoom: React.FC = () => {
   const [loading, setLoading] = useState(true)
 
   // Fetch initial live room data
+  const fetchLiveRoom = useCallback(async () => {
+    try {
+      const res = await api.get(`/auctions/${id}/live`)
+      const initial = res.data as LiveRoomData
+      setData(initial)
+      setBids(initial.recent_bids || [])
+      setCurrentPrice(initial.auction.current_price)
+      setCurrentWinnerId(initial.auction.current_winner_id || null)
+      setCurrentWinnerName(initial.auction.current_winner?.name || 'BELUM ADA')
+      setMinNextBid(initial.min_next_bid)
+      setTotalBids(initial.total_bids)
+      setSecondsRemaining(initial.time_remaining_seconds)
+      return initial
+    } catch (err) {
+      console.error('Failed to load live room', err)
+      toast.error('Gagal menghubungkan ke terminal lelang.')
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
   useEffect(() => {
     let timerInterval: any = null
 
-    const fetchLiveRoom = async () => {
+    fetchLiveRoom().then((initial) => {
+      if (!initial) return
+
+      if (timerInterval) clearInterval(timerInterval)
+
+      // Start countdown
+      timerInterval = setInterval(() => {
+        setSecondsRemaining((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerInterval)
+            if (initial.is_upcoming) {
+              setTimeout(() => fetchLiveRoom(), 1000)
+            }
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+    })
+
+    // Background sync fallback every 4 seconds to guarantee real-time updates
+    const pollInterval = setInterval(async () => {
       try {
         const res = await api.get(`/auctions/${id}/live`)
-        const initial = res.data as LiveRoomData
-        setData(initial)
-        setBids(initial.recent_bids || [])
-        setCurrentPrice(initial.auction.current_price)
-        setCurrentWinnerId(initial.auction.current_winner_id || null)
-        setCurrentWinnerName(initial.auction.current_winner?.name || 'BELUM ADA')
-        setMinNextBid(initial.min_next_bid)
-        setTotalBids(initial.total_bids)
-        setSecondsRemaining(initial.time_remaining_seconds)
-
-        // Start countdown
-        timerInterval = setInterval(() => {
-          setSecondsRemaining((prev) => {
-            if (prev <= 1) {
-              clearInterval(timerInterval)
-              return 0
-            }
-            return prev - 1
-          })
-        }, 1000)
-      } catch (err) {
-        console.error('Failed to load live room', err)
-        toast.error('Gagal menghubungkan ke terminal lelang.')
-      } finally {
-        setLoading(false)
+        const latest = res.data as LiveRoomData
+        setCurrentPrice(latest.auction.current_price)
+        setCurrentWinnerId(latest.auction.current_winner_id || null)
+        setCurrentWinnerName(latest.auction.current_winner?.name || 'BELUM ADA')
+        setMinNextBid(latest.min_next_bid)
+        setTotalBids(latest.total_bids)
+        if (latest.recent_bids && latest.recent_bids.length > 0) {
+          setBids(latest.recent_bids)
+        }
+      } catch {
+        // silent fail on poll
       }
-    }
-
-    fetchLiveRoom()
+    }, 4000)
 
     // Setup Laravel Echo WebSocket listener
     const channel = echo.channel(`auction.${id}`)
@@ -132,11 +161,12 @@ export const LiveRoom: React.FC = () => {
 
     return () => {
       if (timerInterval) clearInterval(timerInterval)
+      if (pollInterval) clearInterval(pollInterval)
       channel.stopListening('.bid.placed')
       channel.stopListening('.auction.extended')
       echo.leaveChannel(`auction.${id}`)
     }
-  }, [id])
+  }, [id, fetchLiveRoom])
 
   const formatRupiah = (val: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -193,6 +223,7 @@ export const LiveRoom: React.FC = () => {
 
       toast.success(res.data.message || 'Penawaran berhasil dikirim ke bursa!')
       setCustomBid('')
+      fetchLiveRoom()
     } catch (err: any) {
       const msg = err.response?.data?.message || err.response?.data?.errors?.bid?.[0] || 'Penawaran ditolak sistem.'
       toast.error(msg)
@@ -225,9 +256,12 @@ export const LiveRoom: React.FC = () => {
     )
   }
 
-  const isUserWinning = user && currentWinnerId === user.id
-  const isAntiSnipingActive = secondsRemaining <= (data.auction.auto_extension_threshold || 120) && secondsRemaining > 0
-  const isAuctionEnded = secondsRemaining === 0
+  const isUserWinning = Boolean(user && currentWinnerId === user.id)
+  const isUserSeller = Boolean(user && data.auction.vehicle?.seller_id === user.id)
+  const isUpcoming = Boolean(data.is_upcoming || (data.auction.start_time && new Date(data.auction.start_time).getTime() > Date.now()))
+  const isAuctionEnded = !isUpcoming && (secondsRemaining === 0 || data.auction.status === 'ended' || data.auction.status === 'finalized')
+  const isAntiSnipingActive = !isUpcoming && secondsRemaining <= (data.auction.auto_extension_threshold || 120) && secondsRemaining > 0
+  const canBid = isAuthenticated && !isUserWinning && !isUserSeller && !isUpcoming && !isAuctionEnded && !isSubmitting
 
   return (
     <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] py-8 font-mono">
@@ -313,18 +347,31 @@ export const LiveRoom: React.FC = () => {
                 {/* Countdown Timer Display */}
                 <div className="absolute top-4 right-4">
                   <div
-                    className={`px-4 py-2 border flex items-center gap-2 backdrop-blur-md ${
-                      isAntiSnipingActive
+                    className={`px-4 py-2 border flex items-center gap-3 backdrop-blur-md ${
+                      isUpcoming
                         ? 'bg-[#e5a93c]/20 border-[#e5a93c] text-[#e5a93c]'
+                        : isAntiSnipingActive
+                        ? 'bg-[#ff5500]/25 border-[#ff5500] text-[#ff5500] animate-pulse'
                         : isAuctionEnded
                         ? 'bg-black/90 border-white/20 text-[#5e5b54]'
                         : 'bg-black/90 border-white/20 text-white'
                     }`}
                   >
-                    <Clock className="w-4 h-4 text-[#ff5500]" />
-                    <span className="text-xl font-extrabold tracking-wider">
-                      {isAuctionEnded ? 'LELANG SELESAI' : formatTime(secondsRemaining)}
-                    </span>
+                    <Clock className={`w-4 h-4 ${isUpcoming ? 'text-[#e5a93c]' : 'text-[#ff5500]'}`} />
+                    <div className="text-right">
+                      <span className="text-[9px] uppercase tracking-wider text-[#9e9a90] block leading-none mb-1">
+                        {isUpcoming
+                          ? 'DIMULAI DALAM'
+                          : isAuctionEnded
+                          ? 'STATUS LOT'
+                          : isAntiSnipingActive
+                          ? 'ANTI-SNIPING EXT'
+                          : 'SISA WAKTU'}
+                      </span>
+                      <span className="text-xl font-extrabold tracking-wider font-mono leading-none">
+                        {isAuctionEnded ? 'LELANG SELESAI' : formatTime(secondsRemaining)}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -384,6 +431,45 @@ export const LiveRoom: React.FC = () => {
                 </div>
               </div>
 
+              {/* Status Alert Banners */}
+              {!isAuthenticated && (
+                <div className="p-4 bg-[#ff5500]/10 border border-[#ff5500]/30 text-white text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-[#ff5500] shrink-0" />
+                    <span>Anda perlu login terlebih dahulu untuk mengajukan penawaran harga langsung.</span>
+                  </div>
+                  <Link
+                    to="/login"
+                    className="px-4 py-1.5 bg-[#ff5500] hover:bg-[#ff5500]/90 text-black font-bold uppercase tracking-wider text-xs whitespace-nowrap text-center transition-colors"
+                  >
+                    Masuk Akun
+                  </Link>
+                </div>
+              )}
+
+              {isUpcoming && (
+                <div className="p-3 bg-[#e5a93c]/10 border border-[#e5a93c]/30 text-[#e5a93c] text-xs flex items-center gap-2">
+                  <Clock className="w-4 h-4 shrink-0" />
+                  <span>Sesi lelang ini belum dimulai. Tombol penawaran akan aktif otomatis begitu waktu lelang dimulai.</span>
+                </div>
+              )}
+
+              {isUserSeller && (
+                <div className="p-3 bg-[#ff5500]/10 border border-[#ff5500]/30 text-[#ff5500] text-xs flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <span>Anda adalah pemilik kendaraan ini. Pemilik dilarang menawar unit sendiri sesuai regulasi bursa.</span>
+                </div>
+              )}
+
+              {isAuctionEnded && (
+                <div className="p-3 bg-white/5 border border-white/20 text-[#9e9a90] text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#d4f728] shrink-0" />
+                  <span>
+                    Sesi lelang telah berakhir. Pemenang lelang: <strong className="text-white">{currentWinnerName}</strong> dengan nilai akhir <strong className="text-[#d4f728]">{formatRupiah(currentPrice)}</strong>.
+                  </span>
+                </div>
+              )}
+
               {/* Notice if user is highest */}
               {isUserWinning && (
                 <div className="p-3 bg-[#d4f728]/10 border border-[#d4f728]/30 text-[#d4f728] text-xs flex items-center gap-2">
@@ -396,7 +482,7 @@ export const LiveRoom: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   type="button"
-                  disabled={isSubmitting || isUserWinning || isAuctionEnded}
+                  disabled={!canBid}
                   onClick={() => handlePlaceBid(minNextBid)}
                   className="py-3 px-4 bg-[#1d2028] hover:bg-[#ff5500] hover:text-black disabled:opacity-30 disabled:hover:bg-[#1d2028] disabled:hover:text-[#e2dfd8] border border-white/10 text-white font-bold text-xs uppercase tracking-wider flex flex-col items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -406,7 +492,7 @@ export const LiveRoom: React.FC = () => {
 
                 <button
                   type="button"
-                  disabled={isSubmitting || isUserWinning || isAuctionEnded}
+                  disabled={!canBid}
                   onClick={() => handlePlaceBid(minNextBid + Number(data.auction.bid_increment))}
                   className="py-3 px-4 bg-[#1d2028] hover:bg-[#ff5500] hover:text-black disabled:opacity-30 disabled:hover:bg-[#1d2028] disabled:hover:text-[#e2dfd8] border border-white/10 text-white font-bold text-xs uppercase tracking-wider flex flex-col items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -418,7 +504,7 @@ export const LiveRoom: React.FC = () => {
 
                 <button
                   type="button"
-                  disabled={isSubmitting || isUserWinning || isAuctionEnded}
+                  disabled={!canBid}
                   onClick={() => handlePlaceBid(minNextBid + Number(data.auction.bid_increment) * 4)}
                   className="py-3 px-4 bg-[#1d2028] hover:bg-[#ff5500] hover:text-black disabled:opacity-30 disabled:hover:bg-[#1d2028] disabled:hover:text-[#e2dfd8] border border-white/10 text-white font-bold text-xs uppercase tracking-wider flex flex-col items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -435,16 +521,16 @@ export const LiveRoom: React.FC = () => {
                   <span className="absolute left-3.5 top-2.5 text-xs text-[#5e5b54] font-bold">RP</span>
                   <input
                     type="number"
-                    disabled={isSubmitting || isUserWinning || isAuctionEnded}
+                    disabled={!canBid}
                     value={customBid}
                     onChange={(e) => setCustomBid(e.target.value)}
                     placeholder={`Nominal kustom (min ${minNextBid})`}
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#08090b] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#08090b] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500] transition-colors disabled:opacity-30"
                   />
                 </div>
                 <button
                   type="button"
-                  disabled={isSubmitting || isUserWinning || isAuctionEnded || !customBid}
+                  disabled={!canBid || !customBid}
                   onClick={() => handlePlaceBid(Number(customBid))}
                   className="px-6 py-2.5 bg-[#e2dfd8] hover:bg-white text-black font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                 >

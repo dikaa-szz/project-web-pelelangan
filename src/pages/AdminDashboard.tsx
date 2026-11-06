@@ -16,7 +16,10 @@ import {
   UploadCloud,
   X,
   Star,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Play,
+  ExternalLink,
+  Clock
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -26,6 +29,7 @@ export const AdminDashboard: React.FC = () => {
   const [pendingVehicles, setPendingVehicles] = useState<any[]>([])
   const [approvedVehicles, setApprovedVehicles] = useState<any[]>([])
   const [liveAuctions, setLiveAuctions] = useState<any[]>([])
+  const [scheduledAuctions, setScheduledAuctions] = useState<any[]>([])
   const [usersList, setUsersList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -114,18 +118,20 @@ export const AdminDashboard: React.FC = () => {
   const fetchAdminData = async () => {
     setLoading(true)
     try {
-      const [statsRes, pendingRes, auctionsRes, usersRes, approvedRes] = await Promise.all([
+      const [statsRes, pendingRes, auctionsRes, usersRes, approvedRes, scheduledRes] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/admin/vehicles/pending'),
         api.get('/auctions?status=live'),
         api.get('/admin/users'),
         api.get('/admin/vehicles/approved'),
+        api.get('/auctions?status=scheduled'),
       ])
       setStats(statsRes.data)
       setPendingVehicles(pendingRes.data || [])
       setLiveAuctions(auctionsRes.data.data || [])
       setUsersList(usersRes.data || [])
       setApprovedVehicles(approvedRes.data || [])
+      setScheduledAuctions(scheduledRes.data.data || [])
     } catch (err) {
       console.error('Failed to fetch admin data', err)
       toast.error('Gagal mengambil data backoffice admin.')
@@ -145,6 +151,16 @@ export const AdminDashboard: React.FC = () => {
       fetchAdminData()
     } catch {
       toast.error('Gagal menyetujui kendaraan.')
+    }
+  }
+
+  const handleStartAuction = async (auctionId: number) => {
+    try {
+      const res = await api.post(`/admin/auctions/${auctionId}/start`)
+      toast.success(res.data.message || 'Sesi lelang berhasil diaktifkan LIVE sekarang!')
+      fetchAdminData()
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Gagal mengaktifkan lelang.')
     }
   }
 
@@ -1043,17 +1059,18 @@ export const AdminDashboard: React.FC = () => {
             </button>
           </div>
 
+          {/* Active Live Auctions Section */}
           <div className="bg-[#0a0c10] border border-white/10">
             <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#08090b]">
               <span className="text-xs font-bold text-white uppercase flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-ping"></span>
-                Daftar Sesi Lelang Aktif
+                Daftar Sesi Lelang Aktif (Live &amp; Extended)
               </span>
               <span className="text-[11px] text-[#9e9a90]">{liveAuctions.length} Sesi Terdeteksi</span>
             </div>
 
             {liveAuctions.length === 0 ? (
-              <div className="p-12 text-center text-xs text-[#5e5b54] uppercase tracking-wider">
+              <div className="p-8 text-center text-xs text-[#5e5b54] uppercase tracking-wider">
                 Saat ini tidak ada sesi lelang yang sedang live.
               </div>
             ) : (
@@ -1085,12 +1102,94 @@ export const AdminDashboard: React.FC = () => {
                           {new Date(auc.end_time).toLocaleTimeString('id-ID')}
                         </td>
                         <td className="py-3 px-4 text-right">
-                          <button
-                            onClick={() => handleFinalize(auc.id)}
-                            className="px-3 py-1.5 bg-[#e2dfd8] hover:bg-white text-black font-bold text-[11px] uppercase cursor-pointer"
-                          >
-                            Finalisasi Pemenang
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <a
+                              href={`/auction/${auc.id}/live`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold uppercase inline-flex items-center gap-1 transition-colors"
+                              title="Buka Terminal Live"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Live
+                            </a>
+                            <button
+                              onClick={() => handleFinalize(auc.id)}
+                              className="px-3 py-1.5 bg-[#e2dfd8] hover:bg-white text-black font-bold text-[11px] uppercase cursor-pointer"
+                            >
+                              Finalisasi Pemenang
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Scheduled Auctions Section */}
+          <div className="bg-[#0a0c10] border border-white/10">
+            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#08090b]">
+              <span className="text-xs font-bold text-white uppercase flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-[#e5a93c]" />
+                Daftar Sesi Lelang Terjadwal (Menunggu Waktu Mulai)
+              </span>
+              <span className="text-[11px] text-[#9e9a90]">{scheduledAuctions.length} Sesi Terjadwal</span>
+            </div>
+
+            {scheduledAuctions.length === 0 ? (
+              <div className="p-8 text-center text-xs text-[#5e5b54] uppercase tracking-wider">
+                Tidak ada sesi lelang terjadwal. Klik &quot;+ Jadwalkan Sesi Baru&quot; di atas untuk membuka lelang kendaraan.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+                    <tr>
+                      <th className="py-3 px-4">ID LOT &amp; UNIT</th>
+                      <th className="py-3 px-4">HARGA DASAR</th>
+                      <th className="py-3 px-4">WAKTU MULAI</th>
+                      <th className="py-3 px-4">DEADLINE SELESAI</th>
+                      <th className="py-3 px-4 text-right">AKSI KONSOL</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {scheduledAuctions.map((auc) => (
+                      <tr key={auc.id} className="hover:bg-white/5 transition-colors">
+                        <td className="py-3 px-4">
+                          <p className="font-bold text-white uppercase">{auc.title}</p>
+                          <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                        </td>
+                        <td className="py-3 px-4 text-[#ff5500] font-bold">{formatRupiah(auc.start_price)}</td>
+                        <td className="py-3 px-4 text-[#e5a93c] font-semibold">
+                          {new Date(auc.start_time).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-3 px-4 text-[#9e9a90]">
+                          {new Date(auc.end_time).toLocaleString('id-ID')}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <a
+                              href={`/auction/${auc.id}/live`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-[#9e9a90] hover:text-white text-[11px] font-bold uppercase inline-flex items-center gap-1 transition-colors"
+                              title="Lihat Ruang Tunggu"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Ruang Tunggu
+                            </a>
+                            <button
+                              onClick={() => handleStartAuction(auc.id)}
+                              className="px-3 py-1.5 bg-[#d4f728] hover:bg-[#c3e622] text-black font-bold text-[11px] uppercase flex items-center gap-1 cursor-pointer transition-colors shadow-[0_0_12px_rgba(212,247,40,0.25)]"
+                              title="Aktifkan sesi ini sekarang secara instan"
+                            >
+                              <Play className="w-3 h-3 fill-current" />
+                              Mulai Live Sekarang
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
