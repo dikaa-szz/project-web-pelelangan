@@ -32,6 +32,8 @@ export const AdminDashboard: React.FC = () => {
   const [approvedVehicles, setApprovedVehicles] = useState<any[]>([])
   const [liveAuctions, setLiveAuctions] = useState<any[]>([])
   const [scheduledAuctions, setScheduledAuctions] = useState<any[]>([])
+  const [allVehicles, setAllVehicles] = useState<any[]>([])
+  const [winners, setWinners] = useState<any[]>([])
   const [usersList, setUsersList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [liveBidFeed, setLiveBidFeed] = useState<Array<{
@@ -125,16 +127,19 @@ export const AdminDashboard: React.FC = () => {
     })
   }
 
+
   const fetchAdminData = async () => {
     setLoading(true)
     try {
-      const [statsRes, pendingRes, auctionsRes, usersRes, approvedRes, scheduledRes] = await Promise.all([
+      const [statsRes, pendingRes, auctionsRes, usersRes, approvedRes, scheduledRes, vehiclesRes, winnersRes] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/admin/vehicles/pending'),
         api.get('/auctions?status=live'),
         api.get('/admin/users'),
         api.get('/admin/vehicles/approved'),
         api.get('/auctions?status=scheduled'),
+        api.get('/admin/vehicles'),
+        api.get('/admin/winners'),
       ])
       setStats(statsRes.data)
       setPendingVehicles(pendingRes.data || [])
@@ -142,6 +147,8 @@ export const AdminDashboard: React.FC = () => {
       setUsersList(usersRes.data || [])
       setApprovedVehicles(approvedRes.data || [])
       setScheduledAuctions(scheduledRes.data.data || [])
+      setAllVehicles(vehiclesRes.data || [])
+      setWinners(winnersRes.data || [])
     } catch (err) {
       console.error('Failed to fetch admin data', err)
       toast.error('Gagal mengambil data backoffice admin.')
@@ -445,6 +452,8 @@ export const AdminDashboard: React.FC = () => {
       setCurrentTab={setCurrentTab}
       pendingCount={pendingVehicles.length}
       liveCount={liveAuctions.length}
+      totalVehiclesCount={allVehicles.length}
+      winnersCount={winners.length}
     >
       {/* Overview Tab */}
       {currentTab === 'overview' && (
@@ -840,7 +849,7 @@ export const AdminDashboard: React.FC = () => {
                     className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500]"
                   >
                     <option value="">-- AutoBid Pusat --</option>
-                    {sellerUsers.map((s) => (
+                    {sellerUsers.map((s: any) => (
                       <option key={s.id} value={s.id}>
                         {s.name} ({s.role})
                       </option>
@@ -1464,6 +1473,198 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
+      {/* Vehicles Tab */}
+      {currentTab === 'vehicles' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+                Data Mobil Lelang
+              </h2>
+              <p className="text-xs text-[#9e9a90] mt-1">
+                Semua kendaraan yang terdaftar dalam sistem lelang.
+              </p>
+            </div>
+            <span className="text-xs font-bold text-[#9e9a90] bg-[#0a0c10] border border-white/10 px-3 py-1">
+              TOTAL: {allVehicles.length} UNIT
+            </span>
+          </div>
+
+          <div className="bg-[#0a0c10] border border-white/10 overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+                <tr>
+                  <th className="py-3 px-4">UNIT & PLAT</th>
+                  <th className="py-3 px-4">BRAND / MODEL</th>
+                  <th className="py-3 px-4">TAHUN</th>
+                  <th className="py-3 px-4">STATUS</th>
+                  <th className="py-3 px-4">KONDISI</th>
+                  <th className="py-3 px-4">PENJUAL</th>
+                  <th className="py-3 px-4 text-right">AKSI</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {allVehicles.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-[#5e5b54]">
+                      Belum ada data kendaraan.
+                    </td>
+                  </tr>
+                ) : (
+                  allVehicles.map((v: any) => (
+                    <tr key={v.id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-4">
+                        <p className="font-bold text-white truncate max-w-[180px]">{v.title}</p>
+                        <p className="text-[10px] text-[#5e5b54]">{v.license_plate || '-'}</p>
+                      </td>
+                      <td className="py-3 px-4 text-[#9e9a90]">
+                        {v.brand} {v.model}
+                      </td>
+                      <td className="py-3 px-4 text-[#9e9a90]">{v.year}</td>
+                      <td className="py-3 px-4">
+                        <span className={`px-2 py-0.5 text-[9px] font-bold uppercase ${
+                          v.status === 'approved' ? 'bg-green-900/40 text-green-400' :
+                          v.status === 'pending_approval' ? 'bg-yellow-900/40 text-yellow-400' :
+                          v.status === 'in_auction' ? 'bg-blue-900/40 text-blue-400' :
+                          v.status === 'sold' ? 'bg-[#d4f728]/20 text-[#d4f728]' :
+                          'bg-white/5 text-[#9e9a90]'
+                        }`}>
+                          {v.status?.replace(/_/g, ' ')}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-0.5 text-[9px] font-bold uppercase bg-white/5 text-[#e2dfd8]">
+                          Grade {v.condition_grade || '-'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-[#9e9a90]">
+                        {v.seller?.name || 'AutoBid Pusat'}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <button
+                          onClick={async () => {
+                            if (!confirm(`Hapus unit "${v.title}"? Tindakan ini tidak dapat dibatalkan.`)) return
+                            try {
+                              await api.delete(`/admin/vehicles/${v.id}`)
+                              toast.success('Unit berhasil dihapus.')
+                              fetchAdminData()
+                            } catch (err: any) {
+                              toast.error(err.response?.data?.message || 'Gagal menghapus unit.')
+                            }
+                          }}
+                          className="px-2 py-1 text-[9px] font-bold uppercase bg-rose-900/40 text-rose-400 hover:bg-rose-900/70 transition-colors cursor-pointer"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Winners Tab */}
+      {currentTab === 'winners' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+                Data Pemenang Lelang
+              </h2>
+              <p className="text-xs text-[#9e9a90] mt-1">
+                Riwayat seluruh pemenang sesi lelang dan status pembayaran.
+              </p>
+            </div>
+            <span className="text-xs font-bold text-[#9e9a90] bg-[#0a0c10] border border-white/10 px-3 py-1">
+              TOTAL: {winners.length} PEMENANG
+            </span>
+          </div>
+
+          <div className="bg-[#0a0c10] border border-white/10 overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+                <tr>
+                  <th className="py-3 px-4">UNIT LELANG</th>
+                  <th className="py-3 px-4">PEMENANG</th>
+                  <th className="py-3 px-4 text-right">HARGA FINAL</th>
+                  <th className="py-3 px-4">STATUS</th>
+                  <th className="py-3 px-4">WAKTU FINALISASI</th>
+                  <th className="py-3 px-4 text-right">AKSI</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {winners.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-[#5e5b54]">
+                      Belum ada data pemenang lelang.
+                    </td>
+                  </tr>
+                ) : (
+                  winners.map((w: any) => (
+                    <tr key={w.id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-4">
+                        <p className="font-bold text-white truncate max-w-[180px]">
+                          {w.auction?.title || w.auction?.vehicle?.title || '-'}
+                        </p>
+                        <p className="text-[10px] text-[#5e5b54]">
+                          {w.auction?.vehicle?.license_plate || ''}
+                        </p>
+                      </td>
+                      <td className="py-3 px-4">
+                        <p className="font-bold text-white">{w.winner?.name || '-'}</p>
+                        <p className="text-[10px] text-[#5e5b54]">{w.winner?.email || ''}</p>
+                      </td>
+                      <td className="py-3 px-4 text-right font-bold text-[#d4f728]">
+                        {formatRupiah(w.final_price)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className={`px-2 py-0.5 text-[9px] font-bold uppercase ${
+                          w.status === 'paid' ? 'bg-green-900/40 text-green-400' :
+                          w.status === 'pending_payment' ? 'bg-yellow-900/40 text-yellow-400' :
+                          w.status === 'finalized' ? 'bg-blue-900/40 text-blue-400' :
+                          'bg-white/5 text-[#9e9a90]'
+                        }`}>
+                          {w.status?.replace(/_/g, ' ')}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-[#9e9a90]">
+                        {w.finalized_at
+                          ? new Date(w.finalized_at).toLocaleString('id-ID')
+                          : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        {w.status === 'pending_payment' && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                await api.post(`/admin/winners/${w.id}/status`, { status: 'paid' })
+                                toast.success('Status pembayaran diperbarui menjadi PAID.')
+                                fetchAdminData()
+                              } catch (err: any) {
+                                toast.error(err.response?.data?.message || 'Gagal memperbarui status.')
+                              }
+                            }}
+                            className="px-2 py-1 text-[9px] font-bold uppercase bg-[#d4f728]/20 text-[#d4f728] hover:bg-[#d4f728]/40 transition-colors cursor-pointer"
+                          >
+                            Konfirmasi Lunas
+                          </button>
+                        )}
+                        {w.status === 'paid' && (
+                          <span className="text-[9px] text-green-400 font-bold uppercase">✓ LUNAS</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Users & KYC Tab */}
       {currentTab === 'users' && (
         <div className="space-y-6">
@@ -1493,7 +1694,7 @@ export const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {usersList.map((u) => (
+                {usersList.map((u: any) => (
                   <tr key={u.id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3 px-4">
                       <p className="font-bold text-white">{u.name}</p>

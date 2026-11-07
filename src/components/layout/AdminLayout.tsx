@@ -10,7 +10,9 @@ import {
   LogOut, 
   ExternalLink, 
   ShieldCheck, 
-  Radio
+  Radio,
+  Trophy,
+  CalendarClock
 } from 'lucide-react'
 
 interface AdminLayoutProps {
@@ -18,6 +20,8 @@ interface AdminLayoutProps {
   setCurrentTab: (tab: string) => void
   pendingCount?: number
   liveCount?: number
+  totalVehiclesCount?: number
+  winnersCount?: number
   children: React.ReactNode
 }
 
@@ -26,6 +30,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   setCurrentTab,
   pendingCount = 0,
   liveCount = 0,
+  totalVehiclesCount = 0,
+  winnersCount = 0,
   children,
 }) => {
   const { user, logout } = useAuth()
@@ -44,9 +50,23 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       badge: null,
     },
     {
+      id: 'vehicles',
+      label: 'Data Mobil Lelang',
+      icon: Car,
+      badge: totalVehiclesCount > 0 ? `${totalVehiclesCount} Unit` : null,
+      badgeColor: 'bg-white/10 text-[#d4f728] border border-[#d4f728]/30',
+    },
+    {
+      id: 'winners',
+      label: 'Data Pemenang Lelang',
+      icon: Trophy,
+      badge: winnersCount > 0 ? `${winnersCount} Pemenang` : null,
+      badgeColor: 'bg-[#d4f728] text-black font-extrabold',
+    },
+    {
       id: 'approvals',
       label: 'Verifikasi Unit Masuk',
-      icon: Car,
+      icon: ShieldCheck,
       badge: pendingCount > 0 ? `${pendingCount} Menunggu` : null,
       badgeColor: 'bg-[#e5a93c] text-black',
     },
@@ -67,7 +87,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     {
       id: 'create-auction',
       label: 'Jadwalkan Sesi Lelang',
-      icon: Gavel,
+      icon: CalendarClock,
       badge: null,
     },
     {
