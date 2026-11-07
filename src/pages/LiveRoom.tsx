@@ -4,6 +4,7 @@ import api from '../services/api'
 import echo from '../services/echo'
 import { useAuth } from '../context/AuthContext'
 import { Auction } from '../types'
+import { getVehicleImageUrl, handleImageError } from '../utils/imageHelper'
 import { Gavel, Clock, Flame, User as UserIcon, AlertTriangle, CheckCircle2, ArrowLeft, Radio, Shield } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -326,11 +327,9 @@ export const LiveRoom: React.FC = () => {
             <div className="bg-[#0f1115] border border-white/10 relative overflow-hidden">
               <div className="relative aspect-[16/9] sm:aspect-[16/10] bg-black overflow-hidden">
                 <img
-                  src={
-                    data.auction.vehicle?.primary_image?.image_url ||
-                    'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80'
-                  }
-                  alt=""
+                  src={getVehicleImageUrl(data.auction.vehicle)}
+                  onError={handleImageError}
+                  alt={data.auction.title}
                   className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
                 />
 

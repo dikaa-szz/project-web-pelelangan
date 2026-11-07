@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import api from '../services/api'
+import echo from '../services/echo'
+import { getVehicleImageUrl, handleImageError } from '../utils/imageHelper'
 import { AdminLayout } from '../components/layout/AdminLayout'
 import { 
   Users, 
@@ -32,6 +34,14 @@ export const AdminDashboard: React.FC = () => {
   const [scheduledAuctions, setScheduledAuctions] = useState<any[]>([])
   const [usersList, setUsersList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [liveBidFeed, setLiveBidFeed] = useState<Array<{
+    id: number
+    auction_id: number
+    auction_title: string
+    amount: number
+    bidder_name: string
+    time: string
+  }>>([])
 
   // Form State for creating new auction
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>('')
@@ -142,6 +152,84 @@ export const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchAdminData()
+
+    // 1. Setup real-time listener via Laravel Echo & Reverb
+    const channel = echo.channel('auctions')
+
+    channel.listen('.bid.placed', (e: any) => {
+      console.log('[ADMIN] Real-time Bid Received:', e)
+
+      // Update live auctions state with new current price and bids count
+      setLiveAuctions((prev) =>
+        prev.map((auc) => {
+          if (auc.id === e.auction_id) {
+            return {
+              ...auc,
+              current_price: e.current_price,
+              total_bids: e.total_bids,
+              current_winner_id: e.current_winner_id,
+              current_winner: {
+                id: e.current_winner_id,
+                name: e.current_winner_name,
+              },
+            }
+          }
+          return auc
+        })
+      )
+
+      // Record in real-time live feed
+      setLiveBidFeed((prev) => [
+        {
+          id: e.bid?.id || Date.now(),
+          auction_id: e.auction_id,
+          auction_title: e.auction_title || e.vehicle_title || `Lot #${e.auction_id}`,
+          amount: e.current_price,
+          bidder_name: e.current_winner_name || 'Peserta',
+          time: new Date().toLocaleTimeString('id-ID'),
+        },
+        ...prev.slice(0, 19),
+      ])
+
+      // Toast alert in admin console
+      toast.success(
+        `🔨 [LIVE BID] ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(e.current_price)} pada Lot #${e.auction_id} (${e.auction_title || 'Unit'}) oleh ${e.current_winner_name}!`,
+        { icon: '⚡', duration: 4000 }
+      )
+    })
+
+    channel.listen('.auction.extended', (e: any) => {
+      setLiveAuctions((prev) =>
+        prev.map((auc) => {
+          if (auc.id === e.auction_id) {
+            return {
+              ...auc,
+              end_time: e.new_end_time,
+              extensions_used: e.extensions_used,
+            }
+          }
+          return auc
+        })
+      )
+      toast(`⏱️ Protokol Anti-Sniping aktif pada Lot #${e.auction_id} (+${e.extension_seconds}s)`, { icon: '⏳' })
+    })
+
+    channel.listen('.auction.status_changed', () => {
+      fetchAdminData()
+    })
+
+    // 2. Background polling fallback every 6 seconds to ensure zero drift
+    const pollInterval = setInterval(() => {
+      fetchAdminData()
+    }, 6000)
+
+    return () => {
+      clearInterval(pollInterval)
+      channel.stopListening('.bid.placed')
+      channel.stopListening('.auction.extended')
+      channel.stopListening('.auction.status_changed')
+      echo.leaveChannel('auctions')
+    }
   }, [])
 
   const handleApprove = async (vehicleId: number) => {
@@ -500,16 +588,53 @@ export const AdminDashboard: React.FC = () => {
                           {formatRupiah(auc.current_price)} ({auc.total_bids} bids)
                         </p>
                       </div>
-                      <button
-                        onClick={() => handleFinalize(auc.id)}
-                        className="px-3 py-1 bg-white/10 hover:bg-[#ff5500] hover:text-black text-white font-bold text-[10px] uppercase cursor-pointer"
-                      >
-                        Finalisasi
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`/auction/${auc.id}/live`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2.5 py-1 bg-white/5 hover:bg-white/15 text-white font-bold text-[10px] uppercase flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-2.5 h-2.5" /> Live
+                        </a>
+                        <button
+                          onClick={() => handleFinalize(auc.id)}
+                          className="px-3 py-1 bg-white/10 hover:bg-[#ff5500] hover:text-black text-white font-bold text-[10px] uppercase cursor-pointer"
+                        >
+                          Finalisasi
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
+
+              {/* Real-time Bid Stream Tape */}
+              <div className="pt-3 border-t border-white/10">
+                <div className="flex items-center justify-between text-[11px] mb-2">
+                  <span className="text-[#9e9a90] uppercase font-bold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-[#d4f728] rounded-full animate-pulse"></span>
+                    Log Tawaran Masuk (Live WebSocket)
+                  </span>
+                  <span className="text-[10px] text-[#5e5b54]">{liveBidFeed.length} Masuk</span>
+                </div>
+                {liveBidFeed.length === 0 ? (
+                  <p className="text-[10px] text-[#5e5b54] italic">Menunggu tawaran baru masuk dari penawar di ruang lelang...</p>
+                ) : (
+                  <div className="space-y-1.5 max-h-40 overflow-y-auto font-mono text-[11px]">
+                    {liveBidFeed.slice(0, 5).map((feed) => (
+                      <div key={feed.id} className="p-2 bg-[#060709] border border-white/5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#5e5b54] text-[9px]">{feed.time}</span>
+                          <span className="font-bold text-white">{feed.bidder_name}</span>
+                          <span className="text-[10px] text-[#9e9a90]">pada Lot #{feed.auction_id}</span>
+                        </div>
+                        <span className="font-bold text-[#d4f728]">{formatRupiah(feed.amount)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -995,8 +1120,9 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex gap-4">
                     <div className="w-24 h-20 bg-black border border-white/10 shrink-0 overflow-hidden">
                       <img
-                        src={veh.primary_image?.image_url || 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=400&q=80'}
-                        alt=""
+                        src={getVehicleImageUrl(veh)}
+                        onError={handleImageError}
+                        alt={veh.title}
                         className="w-full h-full object-cover grayscale"
                       />
                     </div>
@@ -1090,8 +1216,20 @@ export const AdminDashboard: React.FC = () => {
                     {liveAuctions.map((auc) => (
                       <tr key={auc.id} className="hover:bg-white/5 transition-colors">
                         <td className="py-3 px-4">
-                          <p className="font-bold text-white uppercase">{auc.title}</p>
-                          <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-9 bg-black border border-white/10 shrink-0 overflow-hidden">
+                              <img
+                                src={getVehicleImageUrl(auc.vehicle)}
+                                onError={handleImageError}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div>
+                              <p className="font-bold text-white uppercase">{auc.title}</p>
+                              <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                            </div>
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-[#9e9a90]">{formatRupiah(auc.start_price)}</td>
                         <td className="py-3 px-4 text-[#ff5500] font-bold text-sm">
@@ -1159,8 +1297,20 @@ export const AdminDashboard: React.FC = () => {
                     {scheduledAuctions.map((auc) => (
                       <tr key={auc.id} className="hover:bg-white/5 transition-colors">
                         <td className="py-3 px-4">
-                          <p className="font-bold text-white uppercase">{auc.title}</p>
-                          <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-9 bg-black border border-white/10 shrink-0 overflow-hidden">
+                              <img
+                                src={getVehicleImageUrl(auc.vehicle)}
+                                onError={handleImageError}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div>
+                              <p className="font-bold text-white uppercase">{auc.title}</p>
+                              <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                            </div>
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-[#ff5500] font-bold">{formatRupiah(auc.start_price)}</td>
                         <td className="py-3 px-4 text-[#e5a93c] font-semibold">

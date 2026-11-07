@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../services/api'
 import { Auction } from '../types'
+import { getVehicleImageUrl, handleImageError } from '../utils/imageHelper'
 import { Gavel, Clock, ArrowRight, ShieldCheck, ChevronRight, Activity, Cpu, Disc3 } from 'lucide-react'
 
 export const Home: React.FC = () => {
@@ -132,10 +133,8 @@ export const Home: React.FC = () => {
                   <div className="p-5 space-y-4 font-mono">
                     <div className="relative aspect-[16/10] bg-black border border-white/10 overflow-hidden">
                       <img
-                        src={
-                          liveAuctions[0].vehicle?.primary_image?.image_url ||
-                          'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'
-                        }
+                        src={getVehicleImageUrl(liveAuctions[0].vehicle)}
+                        onError={handleImageError}
                         alt={liveAuctions[0].title}
                         className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
                       />
@@ -254,10 +253,8 @@ export const Home: React.FC = () => {
                   {/* Photo & Badges */}
                   <div className="relative aspect-[16/10] bg-black overflow-hidden border-b border-white/10">
                     <img
-                      src={
-                        auction.vehicle?.primary_image?.image_url ||
-                        'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'
-                      }
+                      src={getVehicleImageUrl(auction.vehicle)}
+                      onError={handleImageError}
                       alt={auction.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import api from '../services/api'
 import { Vehicle } from '../types'
+import { formatImageUrl, handleImageError } from '../utils/imageHelper'
 import { ShieldCheck, CheckCircle2, Gavel, FileText, ArrowLeft, Disc3, Clock } from 'lucide-react'
 
 export const VehicleDetail: React.FC = () => {
@@ -166,7 +167,8 @@ export const VehicleDetail: React.FC = () => {
           <div className="lg:col-span-8 space-y-6">
             <div className="relative aspect-[16/10] bg-black border border-white/10 overflow-hidden">
               <img
-                src={images[activeImgIndex]?.image_url}
+                src={formatImageUrl(images[activeImgIndex]?.image_url)}
+                onError={handleImageError}
                 alt={vehicle.title}
                 className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
               />
@@ -188,7 +190,12 @@ export const VehicleDetail: React.FC = () => {
                         : 'border-white/10 opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <img src={img.image_url} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={formatImageUrl(img.image_url)}
+                      onError={handleImageError}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

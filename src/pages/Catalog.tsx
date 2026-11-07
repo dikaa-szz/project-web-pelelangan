@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 import { Vehicle } from '../types'
+import { getVehicleImageUrl, handleImageError } from '../utils/imageHelper'
 import { Search, SlidersHorizontal, ShieldCheck, Gavel, FileText, Clock } from 'lucide-react'
 
 export const Catalog: React.FC = () => {
@@ -204,10 +205,8 @@ export const Catalog: React.FC = () => {
                     {/* Visual Preview */}
                     <div className="relative aspect-[16/10] bg-black overflow-hidden border-b border-white/10">
                       <img
-                        src={
-                          vehicle.primary_image?.image_url ||
-                          'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=800&q=80'
-                        }
+                        src={getVehicleImageUrl(vehicle)}
+                        onError={handleImageError}
                         alt={vehicle.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale contrast-125 group-hover:grayscale-0"
                       />

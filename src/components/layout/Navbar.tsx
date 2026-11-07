@@ -77,10 +77,10 @@ export const Navbar: React.FC = () => {
                 )}
                 {isSeller && (
                   <Link
-                    to="/catalog"
+                    to="/dashboard"
                     className="px-2.5 py-1 text-[11px] font-mono text-[#e5a93c] border border-[#e5a93c]/30 hover:bg-[#e5a93c]/10"
                   >
-                    [+TITIP UNIT]
+                    [PORTAL DEALER]
                   </Link>
                 )}
                 <Link
