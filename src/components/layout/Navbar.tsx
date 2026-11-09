@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { LogOut, Menu, X, Shield, LayoutDashboard } from 'lucide-react'
+import { LogOut, Menu, X, Shield, LayoutDashboard, Radio, ChevronRight } from 'lucide-react'
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout, isAdmin, isSeller } = useAuth()
@@ -17,117 +17,135 @@ export const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <header className="sticky top-0 z-50 bg-[#08090b]/90 backdrop-blur-md border-b border-white/10">
+    <header className="sticky top-0 z-50 glass-nav transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Mark */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-none bg-[#ff5500] text-black font-mono font-black text-xs flex items-center justify-center tracking-tighter shadow-[0_0_15px_rgba(255,85,0,0.35)]">
-              AB
+        <div className="flex items-center justify-between h-20">
+          
+          {/* Modern Luxury Brand Mark */}
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <div className="relative">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-400 p-[1.5px] shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/35 transition-all">
+                <div className="w-full h-full bg-[#070a10] rounded-[14px] flex items-center justify-center font-black text-sm tracking-tighter text-emerald-400">
+                  AB
+                </div>
+              </div>
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#070a10] animate-pulse"></span>
             </div>
             <div className="flex flex-col">
-              <span className="font-display font-extrabold text-base tracking-tight text-[#e2dfd8] uppercase">
-                Auto<span className="text-[#ff5500]">Bid</span>
+              <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+                AUTOBID <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PREMIUM</span>
               </span>
-              <span className="text-[9px] font-mono tracking-widest text-[#9e9a90] uppercase -mt-1">
-                Bursa Lelang
+              <span className="text-[11px] text-slate-400 font-medium -mt-0.5 tracking-wide">
+                Bursa Lelang Otomotif Eksklusif
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider uppercase">
+          {/* Modern Clean Navigation Items */}
+          <nav className="hidden md:flex items-center gap-1 text-sm font-semibold">
             <Link
               to="/"
-              className={`transition-colors py-1 ${
-                isActive('/') ? 'text-[#ff5500] border-b border-[#ff5500]' : 'text-[#9e9a90] hover:text-[#e2dfd8]'
+              className={`px-4 py-2 rounded-xl transition-all ${
+                isActive('/') 
+                  ? 'bg-white/[0.08] text-white font-bold shadow-sm' 
+                  : 'text-slate-300 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
-              [ 01 // Beranda ]
+              Beranda
             </Link>
             <Link
               to="/catalog"
-              className={`transition-colors py-1 ${
-                isActive('/catalog') ? 'text-[#ff5500] border-b border-[#ff5500]' : 'text-[#9e9a90] hover:text-[#e2dfd8]'
+              className={`px-4 py-2 rounded-xl transition-all ${
+                isActive('/catalog') 
+                  ? 'bg-white/[0.08] text-white font-bold shadow-sm' 
+                  : 'text-slate-300 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
-              [ 02 // Katalog Lot ]
+              Katalog Mobil
             </Link>
             <Link
               to="/live"
-              className="flex items-center gap-2 px-3 py-1 bg-[#ff5500]/10 border border-[#ff5500]/30 text-[#ff5500] hover:bg-[#ff5500] hover:text-black transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500/15 to-orange-500/15 border border-rose-500/30 text-rose-300 hover:text-white hover:border-rose-500/60 transition-all font-bold ml-2 shadow-sm"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#ff5500] animate-ping"></span>
-              <span>Lelang Berjalan</span>
+              <Radio className="w-4 h-4 text-rose-400 animate-pulse" />
+              <span>Lelang Sedang Berlangsung</span>
             </Link>
           </nav>
 
-          {/* Auth Actions */}
-          <div className="hidden md:flex items-center gap-4 text-xs font-mono">
+          {/* Modern Auth Actions */}
+          <div className="hidden md:flex items-center gap-3 text-xs">
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className="px-2.5 py-1 text-[11px] font-mono tracking-wider text-[#d4f728] border border-[#d4f728]/30 hover:bg-[#d4f728]/10 flex items-center gap-1.5"
+                    className="px-3.5 py-2 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 shadow-sm"
                   >
-                    <Shield className="w-3 h-3" />
-                    [ADMIN]
+                    <Shield className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Panel Admin</span>
                   </Link>
                 )}
+                
                 {isSeller && (
                   <Link
                     to="/dashboard"
-                    className="px-2.5 py-1 text-[11px] font-mono text-[#e5a93c] border border-[#e5a93c]/30 hover:bg-[#e5a93c]/10"
+                    className="px-3.5 py-2 rounded-xl text-xs font-bold text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 transition-all"
                   >
-                    [PORTAL DEALER]
+                    Portal Dealer
                   </Link>
                 )}
+
                 <Link
                   to="/dashboard"
-                  className="px-2.5 py-1 text-[11px] font-mono text-[#e2dfd8] border border-white/10 hover:border-white/30 flex items-center gap-1.5"
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] flex items-center gap-1.5 transition-all"
                 >
-                  <LayoutDashboard className="w-3 h-3 text-[#9e9a90]" />
-                  <span>DASHBOARD</span>
+                  <LayoutDashboard className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Dashboard Saya</span>
                 </Link>
 
-                <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-                  <div className="text-right">
-                    <p className="text-[11px] font-bold text-[#e2dfd8] leading-none">{user?.name}</p>
-                    <p className="text-[9px] text-[#9e9a90] uppercase mt-0.5">{user?.role}</p>
+                <div className="flex items-center gap-3 pl-3 border-l border-white/[0.08]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-xs text-slate-950 shadow-md">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-xs font-bold text-white leading-none">{user?.name}</p>
+                      <p className="text-[10px] text-emerald-400 capitalize font-medium mt-0.5">{user?.role}</p>
+                    </div>
                   </div>
                   <button
                     onClick={handleLogout}
-                    title="Keluar Akun"
-                    className="p-1 text-[#9e9a90] hover:text-[#ff5500] transition-colors ml-1"
+                    title="Keluar"
+                    className="p-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-white/[0.06] transition-all cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <Link
                   to="/login"
-                  className="px-3 py-1.5 text-[#9e9a90] hover:text-[#e2dfd8] uppercase tracking-wider"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/[0.05] transition-all"
                 >
-                  Masuk
+                  Masuk Akun
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-1.5 bg-[#e2dfd8] hover:bg-white text-black font-bold uppercase tracking-wider transition-all"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-400 to-teal-400 hover:brightness-105 text-slate-950 shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1"
                 >
-                  Registrasi
+                  <span>Daftar Peserta</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Mobile menu trigger */}
-          <div className="flex md:hidden items-center">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#9e9a90] hover:text-white"
+              className="p-2 rounded-xl bg-white/[0.05] border border-white/[0.08] text-slate-300 hover:text-white"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -137,70 +155,67 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-white/10 bg-[#0f1115] px-4 py-4 space-y-3 font-mono text-xs uppercase">
+        <div className="md:hidden border-t border-white/[0.08] bg-[#070a10]/95 backdrop-blur-2xl p-4 space-y-3">
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-[#9e9a90] hover:text-white"
+            className="block px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-200 hover:bg-white/[0.05]"
           >
-            [01 // Beranda]
+            Beranda
           </Link>
           <Link
             to="/catalog"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-[#9e9a90] hover:text-white"
+            className="block px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-200 hover:bg-white/[0.05]"
           >
-            [02 // Katalog Lot]
+            Katalog Mobil
           </Link>
           <Link
             to="/live"
             onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-[#ff5500] font-bold"
+            className="block px-4 py-2.5 rounded-xl text-sm font-bold text-rose-300 bg-rose-500/10 border border-rose-500/20"
           >
-            ● Lelang Berjalan
+            Lelang Sedang Berlangsung
           </Link>
 
           {isAuthenticated ? (
-            <div className="pt-3 border-t border-white/10 space-y-2">
-              <Link
-                to="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-[#e2dfd8]"
-              >
-                Dashboard
-              </Link>
+            <div className="pt-3 border-t border-white/[0.08] space-y-2">
               {isAdmin && (
                 <Link
                   to="/admin"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-[#d4f728]"
+                  className="block px-4 py-2.5 rounded-xl text-sm font-bold text-amber-300 bg-amber-500/10"
                 >
-                  Admin Panel
+                  Panel Admin
                 </Link>
               )}
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  handleLogout()
-                }}
-                className="block w-full text-left py-2 text-[#ff5500]"
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-200 bg-white/[0.05]"
               >
-                Keluar
+                Dashboard Akun
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-rose-400 bg-rose-500/10"
+              >
+                Keluar Akun
               </button>
             </div>
           ) : (
-            <div className="pt-3 border-t border-white/10 flex gap-2">
+            <div className="pt-3 border-t border-white/[0.08] flex flex-col gap-2">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex-1 py-2 text-center border border-white/10 text-[#e2dfd8]"
+                className="block text-center py-2.5 rounded-xl text-sm font-semibold text-slate-200 bg-white/[0.05]"
               >
                 Masuk
               </Link>
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex-1 py-2 text-center bg-[#e2dfd8] text-black font-bold"
+                className="block text-center py-2.5 rounded-xl text-sm font-bold bg-emerald-400 text-slate-950"
               >
                 Daftar
               </Link>
@@ -211,4 +226,3 @@ export const Navbar: React.FC = () => {
     </header>
   )
 }
-export default Navbar

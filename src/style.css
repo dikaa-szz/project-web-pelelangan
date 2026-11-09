@@ -1,21 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  --color-canvas: #08090b;
-  --color-surface: #0f1115;
-  --color-surface-hover: #16181f;
-  --color-surface-elevated: #1d2028;
-  --color-signal: #ff5500;
-  --color-signal-glow: rgba(255, 85, 0, 0.25);
-  --color-amber-signal: #e5a93c;
-  --color-acid: #d4f728;
-  --color-bone: #e2dfd8;
-  --color-stone: #9e9a90;
-  --color-muted: #5e5b54;
+  --color-canvas: #090d16;
+  --color-surface: #0f172a;
+  --color-surface-hover: #1e293b;
+  --color-surface-elevated: #334155;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #f59e0b;
+  --color-success: #10b981;
 }
 
 @layer base {
@@ -24,15 +21,15 @@
   }
 
   body {
-    background-color: #08090b;
-    color: #e2dfd8;
+    background-color: #0b0f19;
+    color: #f8fafc;
     font-family: var(--font-body);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
   }
 
   code, pre, .font-mono {
@@ -40,21 +37,34 @@
   }
 }
 
-/* Subtle microdot pattern for editorial / industrial feel */
-.bg-grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Clean, Human-made Corporate Luxury Styling */
+.card-clean {
+  background-color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
 }
 
-/* Hairline borders */
-.hairline-border {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.table-clean th {
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.03em;
 }
 
-.hairline-b {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* Custom Scrollbar - Minimal & Elegant */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.hairline-t {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }

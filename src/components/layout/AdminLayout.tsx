@@ -2,19 +2,18 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { 
-  BarChart3, 
+  LayoutDashboard, 
   Car, 
   Gavel, 
   Users, 
   PlusCircle, 
   LogOut, 
   ExternalLink, 
-  ShieldCheck, 
-  Radio,
+  CheckSquare, 
   Trophy,
-  CalendarClock,
-  Sparkles,
-  ChevronRight
+  Calendar,
+  CalendarPlus,
+  Bell
 } from 'lucide-react'
 
 interface AdminLayoutProps {
@@ -47,185 +46,156 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const navItems = [
     {
       id: 'overview',
-      label: 'Ikhtisar & Telemetri',
-      icon: BarChart3,
+      label: 'Ringkasan Dashboard',
+      icon: LayoutDashboard,
       badge: null,
-      color: 'text-indigo-400',
     },
     {
       id: 'vehicles',
       label: 'Data Mobil Lelang',
       icon: Car,
-      badge: totalVehiclesCount > 0 ? `${totalVehiclesCount}` : null,
-      badgeColor: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
-      color: 'text-emerald-400',
+      badge: totalVehiclesCount > 0 ? `${totalVehiclesCount} Mobil` : null,
+      badgeColor: 'bg-blue-500/15 text-blue-400 border border-blue-500/20',
     },
     {
       id: 'winners',
       label: 'Data Pemenang Lelang',
       icon: Trophy,
-      badge: winnersCount > 0 ? `${winnersCount}` : null,
-      badgeColor: 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
-      color: 'text-amber-400',
+      badge: winnersCount > 0 ? `${winnersCount} Pemenang` : null,
+      badgeColor: 'bg-amber-500/15 text-amber-300 border border-amber-500/20',
     },
     {
       id: 'approvals',
-      label: 'Verifikasi Unit Masuk',
-      icon: ShieldCheck,
-      badge: pendingCount > 0 ? `${pendingCount}` : null,
-      badgeColor: 'bg-orange-500/15 text-orange-400 border border-orange-500/30',
-      color: 'text-orange-400',
+      label: 'Persetujuan Mobil',
+      icon: CheckSquare,
+      badge: pendingCount > 0 ? `${pendingCount} Menunggu` : null,
+      badgeColor: 'bg-amber-500/20 text-amber-400 font-semibold',
     },
     {
       id: 'auctions',
-      label: 'Kontrol Sesi Lelang',
+      label: 'Sesi & Jadwal Lelang',
       icon: Gavel,
-      badge: liveCount > 0 ? `${liveCount} LIVE` : null,
-      badgeColor: 'bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse',
-      color: 'text-rose-400',
+      badge: liveCount > 0 ? `${liveCount} Berjalan` : null,
+      badgeColor: 'bg-emerald-500/20 text-emerald-400 font-semibold',
     },
     {
       id: 'create-vehicle',
-      label: 'Input Mobil Baru',
+      label: 'Tambah Mobil Baru',
       icon: PlusCircle,
-      badge: 'BARU',
-      badgeColor: 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold',
-      color: 'text-cyan-400',
+      badge: null,
     },
     {
       id: 'create-auction',
-      label: 'Jadwalkan Sesi Lelang',
-      icon: CalendarClock,
+      label: 'Buat Jadwal Lelang',
+      icon: CalendarPlus,
       badge: null,
-      color: 'text-purple-400',
     },
     {
       id: 'users',
-      label: 'Pengguna & KYC',
+      label: 'Daftar Pengguna',
       icon: Users,
       badge: null,
-      color: 'text-blue-400',
     },
   ]
 
   const currentTabObj = navItems.find((n) => n.id === currentTab)
 
-  return (
-    <div className="min-h-screen bg-[#07090e] text-[#f1f3f9] flex antialiased selection:bg-[#d4f728] selection:text-black">
-      {/* Admin Sidebar */}
-      <aside className="w-72 bg-gradient-to-b from-[#0b0e17] via-[#090b12] to-[#06070a] border-r border-white/[0.07] flex flex-col justify-between shrink-0 hidden md:flex shadow-2xl relative z-20">
-        <div>
-          {/* Brand Header */}
-          <div className="p-6 border-b border-white/[0.06]">
-            <div className="flex items-center gap-3.5">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#ff5500] via-[#e5a93c] to-[#d4f728] p-[1.5px] shadow-lg shadow-[#ff5500]/20">
-                  <div className="w-full h-full bg-[#090c13] rounded-[14px] flex items-center justify-center font-black text-sm tracking-tighter text-[#d4f728]">
-                    AB
-                  </div>
-                </div>
-                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0b0e17] animate-pulse"></span>
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-base text-white tracking-tight">
-                    AUTOBID
-                  </span>
-                  <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded-md bg-[#d4f728]/10 text-[#d4f728] border border-[#d4f728]/20">
-                    PRO
-                  </span>
-                </div>
-                <span className="text-[11px] text-slate-400 font-medium block truncate">
-                  Executive Admin Ops
-                </span>
-              </div>
-            </div>
+  // Tanggal hari ini dalam format Indonesia
+  const todayFormatted = new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date())
 
-            <div className="mt-4 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs text-slate-300">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
-                <span className="text-[11px] font-medium text-slate-300">Core Engine Online</span>
+  return (
+    <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex antialiased selection:bg-blue-600 selection:text-white">
+      {/* Sidebar Admin Modern & Clean */}
+      <aside className="w-64 bg-[#0d1322] border-r border-slate-800/80 flex flex-col justify-between shrink-0 hidden md:flex">
+        <div>
+          {/* Logo Header */}
+          <div className="p-5 border-b border-slate-800/80">
+            <Link to="/admin" className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-base shadow-md shadow-blue-600/30">
+                AB
               </div>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-400">v2.5.0</span>
-            </div>
+              <div>
+                <h1 className="font-bold text-base text-white tracking-tight leading-none">
+                  AutoBid Admin
+                </h1>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Panel Pengelola Lelang
+                </p>
+              </div>
+            </Link>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="p-4 space-y-1.5">
-            <div className="text-[11px] text-slate-500 uppercase tracking-wider px-3 py-2 font-bold flex items-center justify-between">
-              <span>Navigasi Manajemen</span>
-              <Sparkles className="w-3 h-3 text-[#d4f728]" />
-            </div>
+          {/* Menu Navigasi */}
+          <div className="p-3">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-3 py-2">
+              Menu Utama
+            </p>
+            <nav className="space-y-1">
+              {navItems.map((item) => {
+                const Icon = item.icon
+                const isActive = currentTab === item.id
 
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const isActive = currentTab === item.id
-
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setCurrentTab(item.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-left text-xs font-medium group ${
-                    isActive
-                      ? 'bg-gradient-to-r from-white/[0.12] to-white/[0.04] text-white border border-white/10 shadow-lg shadow-black/20'
-                      : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-1.5 rounded-lg transition-colors ${
-                      isActive 
-                        ? 'bg-[#d4f728]/20 text-[#d4f728]' 
-                        : `${item.color} bg-white/[0.03] group-hover:bg-white/[0.08]`
-                    }`}>
-                      <Icon className="w-4 h-4" />
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setCurrentTab(item.id)}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition-colors cursor-pointer text-left ${
+                      isActive
+                        ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      <span>{item.label}</span>
                     </div>
-                    <span className="font-semibold">{item.label}</span>
-                  </div>
 
-                  <div className="flex items-center gap-1.5">
                     {item.badge && (
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.badgeColor}`}>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white font-bold' : item.badgeColor}`}>
                         {item.badge}
                       </span>
                     )}
-                    {isActive && <ChevronRight className="w-3.5 h-3.5 text-[#d4f728]" />}
-                  </div>
-                </button>
-              )
-            })}
-          </nav>
+                  </button>
+                )
+              })}
+            </nav>
+          </div>
         </div>
 
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-white/[0.06] space-y-3 bg-[#06080d]/60">
+        {/* Footer Sidebar */}
+        <div className="p-4 border-t border-slate-800/80 space-y-3 bg-[#0a0f1b]">
           <Link
             to="/"
             target="_blank"
-            className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-white/[0.04] to-white/[0.02] hover:from-white/[0.08] hover:to-white/[0.04] border border-white/[0.08] text-xs font-semibold text-slate-200 flex items-center justify-between transition-all group"
+            className="w-full py-2 px-3 rounded-lg bg-slate-800/60 hover:bg-slate-800 text-xs font-medium text-slate-300 flex items-center justify-between transition-colors"
           >
             <span className="flex items-center gap-2">
-              <ExternalLink className="w-4 h-4 text-[#ff5500] group-hover:scale-110 transition-transform" />
-              Portal Publik Pembeli
+              <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
+              Buka Website Pembeli
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">↗</span>
+            <span className="text-[11px] text-slate-500">↗</span>
           </Link>
 
-          <div className="flex items-center justify-between p-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+          {/* Info Admin Logged In */}
+          <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-2.5 min-w-0 pr-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-xs font-bold text-white shadow-md">
+              <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
               </div>
               <div className="min-w-0">
-                <p className="font-bold text-white text-xs truncate">{user?.name || 'Admin Master'}</p>
-                <p className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Super Admin
-                </p>
+                <p className="font-semibold text-white text-xs truncate">{user?.name || 'Admin'}</p>
+                <p className="text-[10px] text-slate-400 truncate">{user?.email || 'Administrator'}</p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              title="Keluar dari Admin"
-              className="p-2 rounded-lg bg-white/[0.04] hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+              title="Keluar dari Akun"
+              className="p-1.5 rounded-lg bg-slate-800/50 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -233,55 +203,47 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </div>
       </aside>
 
-      {/* Main Backoffice Content Area */}
+      {/* Konten Halaman */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
-        {/* Top Header */}
-        <header className="h-16 bg-[#090c13]/80 backdrop-blur-xl border-b border-white/[0.06] px-6 lg:px-8 flex items-center justify-between shrink-0 sticky top-0 z-10 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-slate-300 hidden sm:flex">
-              {currentTabObj?.icon ? React.createElement(currentTabObj.icon, { className: `w-4 h-4 ${currentTabObj.color}` }) : null}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500 font-medium">AutoBid Ops /</span>
-                <span className="text-white font-bold text-sm tracking-tight">
-                  {currentTabObj?.label || 'Dashboard'}
-                </span>
-              </div>
-              <span className="text-[11px] text-slate-400 hidden md:block">
-                Sistem Pengendalian Lelang Terpusat & Terverifikasi
-              </span>
-            </div>
+        {/* Topbar Bersih & Humanis */}
+        <header className="h-16 bg-[#0d1322] border-b border-slate-800/80 px-6 lg:px-8 flex items-center justify-between shrink-0">
+          <div>
+            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+              <span>{currentTabObj?.label || 'Dashboard'}</span>
+            </h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              {todayFormatted}
+            </p>
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-slate-300">
-              <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span>Realtime: <strong className="text-white font-mono">:8080 Active</strong></span>
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/60 text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>Sistem Siap</span>
             </div>
 
             <Link
               to="/"
               target="_blank"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d4f728] to-[#c5e820] hover:brightness-105 text-black font-extrabold text-xs shadow-md shadow-[#d4f728]/15 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-colors"
             >
-              <span>Live Buyer</span>
+              <span>Website Publik</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
           </div>
         </header>
 
         {/* Mobile Navigation Bar */}
-        <div className="md:hidden bg-[#0a0d16] border-b border-white/[0.08] p-2 flex overflow-x-auto gap-1.5 text-xs no-scrollbar">
+        <div className="md:hidden bg-[#0d1322] border-b border-slate-800 p-2 flex overflow-x-auto gap-1 text-xs">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setCurrentTab(item.id)}
-              className={`px-3 py-2 rounded-lg whitespace-nowrap text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-md whitespace-nowrap text-xs font-medium transition-colors ${
                 currentTab === item.id 
-                  ? 'bg-[#d4f728] text-black shadow-md' 
-                  : 'text-slate-400 bg-white/[0.03] hover:text-white'
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               {item.label}
@@ -289,8 +251,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           ))}
         </div>
 
-        {/* Page Content Body */}
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto bg-gradient-to-b from-transparent to-black/30">
+        {/* Isi Halaman */}
+        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
