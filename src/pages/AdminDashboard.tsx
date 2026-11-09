@@ -22,12 +22,8 @@ import {
   Play,
   ExternalLink,
   Clock,
-  Trash2,
-  Trophy,
-  Check,
-  CheckCircle,
   Search,
-  Filter
+  Trophy
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -638,97 +634,6 @@ export const AdminDashboard: React.FC = () => {
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      )}
-                        onClick={() => handleApprove(veh.id)}
-                        className="px-3 py-1 bg-[#d4f728] hover:bg-[#c3e622] text-black font-bold text-[10px] uppercase cursor-pointer"
-                      >
-                        Setujui
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Right: Live Bidding Monitor */}
-            <div className="p-6 bg-[#0a0c10] border border-white/10 space-y-4">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="font-display font-bold text-sm text-white uppercase flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-ping"></span>
-                  Sesi Lelang Berjalan ({liveAuctions.length})
-                </span>
-                <button
-                  onClick={() => setCurrentTab('auctions')}
-                  className="text-xs text-[#ff5500] hover:underline uppercase"
-                >
-                  Buka Terminal &gt;
-                </button>
-              </div>
-
-              {liveAuctions.length === 0 ? (
-                <div className="py-8 text-center text-xs text-[#5e5b54]">
-                  Tidak ada sesi lelang yang sedang live saat ini.
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {liveAuctions.slice(0, 3).map((auc) => (
-                    <div key={auc.id} className="p-3 bg-[#060709] border border-white/10 flex items-center justify-between text-xs">
-                      <div>
-                        <p className="font-bold text-white uppercase">{auc.title}</p>
-                        <p className="text-[11px] text-[#ff5500] font-bold mt-0.5">
-                          {formatRupiah(auc.current_price)} ({auc.total_bids} bids)
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={`/auction/${auc.id}/live`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-2.5 py-1 bg-white/5 hover:bg-white/15 text-white font-bold text-[10px] uppercase flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-2.5 h-2.5" /> Live
-                        </a>
-                        <button
-                          onClick={() => handleFinalize(auc.id)}
-                          className="px-3 py-1 bg-white/10 hover:bg-[#ff5500] hover:text-black text-white font-bold text-[10px] uppercase cursor-pointer"
-                        >
-                          Finalisasi
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Real-time Bid Stream Tape */}
-              <div className="pt-3 border-t border-white/10">
-                <div className="flex items-center justify-between text-[11px] mb-2">
-                  <span className="text-[#9e9a90] uppercase font-bold flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-[#d4f728] rounded-full animate-pulse"></span>
-                    Log Tawaran Masuk (Live WebSocket)
-                  </span>
-                  <span className="text-[10px] text-[#5e5b54]">{liveBidFeed.length} Masuk</span>
-                </div>
-                {liveBidFeed.length === 0 ? (
-                  <p className="text-[10px] text-[#5e5b54] italic">Menunggu tawaran baru masuk dari penawar di ruang lelang...</p>
-                ) : (
-                  <div className="space-y-1.5 max-h-40 overflow-y-auto font-mono text-[11px]">
-                    {liveBidFeed.slice(0, 5).map((feed) => (
-                      <div key={feed.id} className="p-2 bg-[#060709] border border-white/5 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[#5e5b54] text-[9px]">{feed.time}</span>
-                          <span className="font-bold text-white">{feed.bidder_name}</span>
-                          <span className="text-[10px] text-[#9e9a90]">pada Lot #{feed.auction_id}</span>
-                        </div>
-                        <span className="font-bold text-[#d4f728]">{formatRupiah(feed.amount)}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -1558,7 +1463,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Vehicles Tab - Modern & Elegant */}
+      {/* Vehicles Tab - Human-crafted Clean Corporate Design */}
       {currentTab === 'vehicles' && (() => {
         const filteredVehicles = allVehicles.filter((v: any) => {
           const matchSearch = vehicleSearch === '' || 
@@ -1571,91 +1476,81 @@ export const AdminDashboard: React.FC = () => {
         })
 
         return (
-          <div className="space-y-6">
-            {/* Header Banner */}
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-[#0d121c] to-[#0a0d14] border border-emerald-500/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-[1px] shadow-lg shadow-emerald-500/20">
-                  <div className="w-full h-full bg-[#080c14] rounded-[15px] flex items-center justify-center text-emerald-400">
-                    <Car className="w-6 h-6" />
-                  </div>
+          <div className="space-y-5">
+            {/* Header Bersih & Rapi */}
+            <div className="p-5 rounded-xl bg-[#0f172a] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-lg font-bold text-white tracking-tight">
+                    Daftar Mobil Lelang
+                  </h2>
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    {allVehicles.length} Mobil
+                  </span>
                 </div>
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <h2 className="font-extrabold text-xl text-white tracking-tight">
-                      Katalog Unit Mobil Lelang
-                    </h2>
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      {allVehicles.length} Unit Terdaftar
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Database inventaris lengkap seluruh unit kendaraan untuk sesi lelang AutoBid.
-                  </p>
-                </div>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Kelola data seluruh kendaraan yang didaftarkan untuk proses lelang.
+                </p>
               </div>
 
-              <div className="flex items-center gap-2.5 self-start md:self-auto">
-                <button
-                  onClick={() => setCurrentTab('create-vehicle')}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 hover:brightness-105 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/15 flex items-center gap-2 transition-all cursor-pointer"
-                >
-                  <Plus className="w-4 h-4 stroke-[3]" />
-                  <span>Input Unit Baru</span>
-                </button>
-              </div>
+              <button
+                onClick={() => setCurrentTab('create-vehicle')}
+                className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-2 transition-colors cursor-pointer self-start sm:self-auto shadow-sm"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Tambah Mobil Baru</span>
+              </button>
             </div>
 
             {/* Filter & Search Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#0b0e17] border border-white/[0.06] shadow-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-xl bg-[#0f172a] border border-slate-800">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Cari berdasarkan nama mobil, brand, model, atau plat nomor..."
+                  placeholder="Cari nama mobil, merk, model, atau nomor plat..."
                   value={vehicleSearch}
                   onChange={(e) => setVehicleSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <Filter className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                <span className="text-xs text-slate-400 hidden sm:inline">Status:</span>
                 <select
                   value={vehicleStatusFilter}
                   onChange={(e) => setVehicleStatusFilter(e.target.value)}
-                  className="px-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-slate-200 focus:outline-none focus:border-emerald-500/50"
+                  className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                 >
                   <option value="all">Semua Status</option>
-                  <option value="approved">Approved (Siap Lelang)</option>
-                  <option value="in_auction">In Auction (Sedang Lelang)</option>
-                  <option value="pending_approval">Pending Approval</option>
-                  <option value="sold">Sold (Terjual)</option>
+                  <option value="approved">Siap Lelang (Approved)</option>
+                  <option value="in_auction">Sedang Lelang</option>
+                  <option value="pending_approval">Menunggu Persetujuan</option>
+                  <option value="sold">Terjual</option>
                 </select>
               </div>
             </div>
 
-            {/* Elegant Table Card */}
-            <div className="rounded-2xl border border-white/[0.07] bg-[#0a0d16]/90 backdrop-blur-md shadow-2xl overflow-hidden">
+            {/* Tabel Mobil Bersih & Teratur */}
+            <div className="rounded-xl border border-slate-800 bg-[#0f172a] overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#070910] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/[0.06]">
+                  <thead className="bg-slate-900/80 text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-800">
                     <tr>
-                      <th className="py-3.5 px-5">Unit Kendaraan</th>
-                      <th className="py-3.5 px-4">Spesifikasi</th>
-                      <th className="py-3.5 px-4">Kondisi &amp; Grade</th>
-                      <th className="py-3.5 px-4">Status Unit</th>
-                      <th className="py-3.5 px-4">Dealer / Seller</th>
-                      <th className="py-3.5 px-5 text-right">Tindakan</th>
+                      <th className="py-3 px-4">Mobil &amp; Plat</th>
+                      <th className="py-3 px-4">Spesifikasi</th>
+                      <th className="py-3 px-4">Kondisi Fisik</th>
+                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4">Penjual</th>
+                      <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.04]">
+                  <tbody className="divide-y divide-slate-800/80">
                     {filteredVehicles.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-16 text-center text-slate-500">
-                          <Car className="w-8 h-8 mx-auto mb-2 opacity-30 text-emerald-400" />
-                          <p className="font-semibold text-slate-400">Tidak ada unit kendaraan ditemukan.</p>
-                          <p className="text-[11px] text-slate-500 mt-0.5">Coba ubah kata kunci pencarian atau filter status.</p>
+                        <td colSpan={6} className="py-12 text-center text-slate-500">
+                          <Car className="w-8 h-8 mx-auto mb-2 opacity-30 text-slate-400" />
+                          <p className="font-semibold text-slate-400">Tidak ada mobil yang sesuai pencarian.</p>
                         </td>
                       </tr>
                     ) : (
@@ -1667,122 +1562,91 @@ export const AdminDashboard: React.FC = () => {
                         const isPending = v.status === 'pending_approval'
 
                         return (
-                          <tr key={v.id} className="hover:bg-white/[0.02] transition-colors group">
-                            {/* Unit & Image */}
-                            <td className="py-3.5 px-5">
-                              <div className="flex items-center gap-3.5">
-                                <div className="w-14 h-11 rounded-xl bg-slate-900 border border-white/10 overflow-hidden shrink-0 relative group/thumb">
+                          <tr key={v.id} className="hover:bg-slate-800/40 transition-colors">
+                            {/* Mobil & Foto */}
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-10 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
                                   {imgUrl ? (
                                     <img
                                       src={imgUrl}
                                       alt={v.title}
                                       onError={handleImageError}
-                                      className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-300"
+                                      className="w-full h-full object-cover"
                                     />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center text-slate-600">
-                                      <Car className="w-5 h-5" />
+                                      <Car className="w-4 h-4" />
                                     </div>
                                   )}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-bold text-white text-xs truncate max-w-[220px] group-hover:text-emerald-300 transition-colors">
+                                  <p className="font-semibold text-white text-xs truncate max-w-[200px]">
                                     {v.title}
                                   </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-black/60 border border-white/15 text-slate-300 tracking-wider">
-                                      {v.license_plate || 'NO-PLATE'}
-                                    </span>
-                                    <span className="text-[10px] text-slate-500 font-mono">
-                                      #{v.id}
-                                    </span>
-                                  </div>
+                                  <span className="inline-block mt-0.5 font-mono text-[11px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
+                                    {v.license_plate || '-'}
+                                  </span>
                                 </div>
                               </div>
                             </td>
 
                             {/* Spesifikasi */}
-                            <td className="py-3.5 px-4 text-slate-300">
-                              <p className="font-semibold text-white">{v.brand} {v.model}</p>
-                              <p className="text-[11px] text-slate-400 capitalize mt-0.5">
+                            <td className="py-3 px-4 text-slate-300">
+                              <p className="font-medium text-white">{v.brand} {v.model}</p>
+                              <p className="text-[11px] text-slate-400 capitalize">
                                 {v.year} • {v.transmission} • {v.fuel_type}
                               </p>
                             </td>
 
-                            {/* Kondisi & Grade */}
-                            <td className="py-3.5 px-4">
-                              <div className="flex items-center gap-2">
-                                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase flex items-center gap-1 ${
-                                  v.condition_grade === 'A' 
-                                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                                    : v.condition_grade === 'B'
-                                    ? 'bg-blue-500/15 text-blue-300 border border-blue-500/30'
-                                    : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                                }`}>
-                                  <Star className="w-3 h-3 fill-current" />
-                                  Grade {v.condition_grade || '-'}
-                                </span>
-                                {v.inspection?.overall_score && (
-                                  <span className="text-[10px] font-mono font-bold text-slate-400">
-                                    {v.inspection.overall_score}/100
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-
-                            {/* Status Unit */}
-                            <td className="py-3.5 px-4">
-                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                                isApproved
-                                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                                  : isInAuction
-                                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30 animate-pulse'
-                                  : isSold
-                                  ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-                                  : isPending
-                                  ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                                  : 'bg-white/5 text-slate-400 border border-white/10'
-                              }`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${
-                                  isApproved ? 'bg-emerald-400' :
-                                  isInAuction ? 'bg-purple-400' :
-                                  isSold ? 'bg-blue-400' :
-                                  isPending ? 'bg-amber-400' : 'bg-slate-400'
-                                }`}></span>
-                                {v.status?.replace(/_/g, ' ')}
+                            {/* Kondisi */}
+                            <td className="py-3 px-4">
+                              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-200">
+                                Grade {v.condition_grade || 'A'}
                               </span>
                             </td>
 
-                            {/* Dealer / Seller */}
-                            <td className="py-3.5 px-4">
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center text-[10px] font-bold text-slate-300">
-                                  {v.seller?.name ? v.seller.name.charAt(0).toUpperCase() : 'A'}
-                                </div>
-                                <span className="text-slate-300 font-medium truncate max-w-[140px]">
-                                  {v.seller?.name || 'AutoBid Pusat'}
-                                </span>
-                              </div>
+                            {/* Status */}
+                            <td className="py-3 px-4">
+                              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
+                                isApproved
+                                  ? 'bg-emerald-500/15 text-emerald-400'
+                                  : isInAuction
+                                  ? 'bg-blue-500/15 text-blue-400'
+                                  : isSold
+                                  ? 'bg-slate-700 text-slate-300'
+                                  : isPending
+                                  ? 'bg-amber-500/15 text-amber-400'
+                                  : 'bg-slate-800 text-slate-400'
+                              }`}>
+                                {v.status === 'approved' ? 'Siap Lelang' :
+                                 v.status === 'in_auction' ? 'Sedang Lelang' :
+                                 v.status === 'sold' ? 'Terjual' :
+                                 v.status === 'pending_approval' ? 'Menunggu' : v.status}
+                              </span>
+                            </td>
+
+                            {/* Penjual */}
+                            <td className="py-3 px-4 text-slate-300">
+                              {v.seller?.name || 'AutoBid Pusat'}
                             </td>
 
                             {/* Aksi */}
-                            <td className="py-3.5 px-5 text-right">
+                            <td className="py-3 px-4 text-right">
                               <button
                                 onClick={async () => {
-                                  if (!confirm(`Hapus unit "${v.title}" (${v.license_plate})? Tindakan ini tidak dapat dibatalkan.`)) return
+                                  if (!confirm(`Hapus mobil "${v.title}" (${v.license_plate})? Tindakan ini tidak dapat dibatalkan.`)) return
                                   try {
                                     await api.delete(`/admin/vehicles/${v.id}`)
-                                    toast.success('Unit mobil berhasil dihapus dari sistem.')
+                                    toast.success('Data mobil berhasil dihapus.')
                                     fetchAdminData()
                                   } catch (err: any) {
-                                    toast.error(err.response?.data?.message || 'Gagal menghapus unit.')
+                                    toast.error(err.response?.data?.message || 'Gagal menghapus data mobil.')
                                   }
                                 }}
-                                title="Hapus Unit"
-                                className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 border border-rose-500/20 transition-all cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold"
+                                className="px-2.5 py-1 rounded-md text-xs font-medium text-rose-400 hover:bg-rose-500/15 transition-colors cursor-pointer"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                <span className="hidden sm:inline">Hapus</span>
+                                Hapus
                               </button>
                             </td>
                           </tr>
@@ -1797,7 +1661,7 @@ export const AdminDashboard: React.FC = () => {
         )
       })()}
 
-      {/* Winners Tab - Modern & Elegant */}
+      {/* Winners Tab - Human-crafted Clean Corporate Design */}
       {currentTab === 'winners' && (() => {
         const filteredWinners = winners.filter((w: any) => {
           if (!winnerSearch) return true
@@ -1812,66 +1676,58 @@ export const AdminDashboard: React.FC = () => {
         })
 
         return (
-          <div className="space-y-6">
-            {/* Header Banner */}
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-950/30 via-[#0d121c] to-[#0a0d14] border border-amber-500/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-[1px] shadow-lg shadow-amber-500/20">
-                  <div className="w-full h-full bg-[#080c14] rounded-[15px] flex items-center justify-center text-amber-400">
-                    <Trophy className="w-6 h-6" />
-                  </div>
+          <div className="space-y-5">
+            {/* Header Bersih */}
+            <div className="p-5 rounded-xl bg-[#0f172a] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-lg font-bold text-white tracking-tight">
+                    Data Pemenang Lelang
+                  </h2>
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/20">
+                    {winners.length} Pemenang
+                  </span>
                 </div>
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <h2 className="font-extrabold text-xl text-white tracking-tight">
-                      Data Pemenang &amp; Hasil Lelang
-                    </h2>
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                      {winners.length} Pemenang Tercatat
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Rekapitulasi resmi pemenang lot lelang, status settlement, dan invoice pelunasan.
-                  </p>
-                </div>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Daftar pemenang sesi lelang beserta status verifikasi pelunasan transaksi.
+                </p>
               </div>
             </div>
 
             {/* Search Bar */}
-            <div className="p-3 rounded-2xl bg-[#0b0e17] border border-white/[0.06] shadow-sm">
+            <div className="p-3 rounded-xl bg-[#0f172a] border border-slate-800">
               <div className="relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Cari pemenang berdasarkan nama, email, judul lelang, atau plat nomor mobil..."
+                  placeholder="Cari nama pemenang, email, mobil lelang, atau plat nomor..."
                   value={winnerSearch}
                   onChange={(e) => setWinnerSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
             </div>
 
-            {/* Elegant Table Card */}
-            <div className="rounded-2xl border border-white/[0.07] bg-[#0a0d16]/90 backdrop-blur-md shadow-2xl overflow-hidden">
+            {/* Tabel Pemenang Bersih */}
+            <div className="rounded-xl border border-slate-800 bg-[#0f172a] overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#070910] text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/[0.06]">
+                  <thead className="bg-slate-900/80 text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-800">
                     <tr>
-                      <th className="py-3.5 px-5">Unit Lelang</th>
-                      <th className="py-3.5 px-4">Pemenang Lot</th>
-                      <th className="py-3.5 px-4 text-right">Harga Final (GMV)</th>
-                      <th className="py-3.5 px-4">Status Pembayaran</th>
-                      <th className="py-3.5 px-4">Waktu Penyelesaian</th>
-                      <th className="py-3.5 px-5 text-right">Konfirmasi</th>
+                      <th className="py-3 px-4">Mobil Lelang</th>
+                      <th className="py-3 px-4">Pemenang</th>
+                      <th className="py-3 px-4 text-right">Harga Menang</th>
+                      <th className="py-3 px-4">Status Pembayaran</th>
+                      <th className="py-3 px-4">Tanggal Selesai</th>
+                      <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.04]">
+                  <tbody className="divide-y divide-slate-800/80">
                     {filteredWinners.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-16 text-center text-slate-500">
+                        <td colSpan={6} className="py-12 text-center text-slate-500">
                           <Trophy className="w-8 h-8 mx-auto mb-2 opacity-30 text-amber-400" />
                           <p className="font-semibold text-slate-400">Belum ada pemenang lelang tercatat.</p>
-                          <p className="text-[11px] text-slate-500 mt-0.5">Pemenang akan otomatis masuk saat sesi lelang difinalisasi.</p>
                         </td>
                       </tr>
                     ) : (
@@ -1881,11 +1737,11 @@ export const AdminDashboard: React.FC = () => {
                         const isPaid = w.status === 'paid'
 
                         return (
-                          <tr key={w.id} className="hover:bg-white/[0.02] transition-colors group">
-                            {/* Unit Lelang */}
-                            <td className="py-3.5 px-5">
-                              <div className="flex items-center gap-3.5">
-                                <div className="w-14 h-11 rounded-xl bg-slate-900 border border-white/10 overflow-hidden shrink-0 relative">
+                          <tr key={w.id} className="hover:bg-slate-800/40 transition-colors">
+                            {/* Mobil Lelang */}
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-10 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
                                   {imgUrl ? (
                                     <img
                                       src={imgUrl}
@@ -1895,104 +1751,76 @@ export const AdminDashboard: React.FC = () => {
                                     />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center text-slate-600">
-                                      <Car className="w-5 h-5" />
+                                      <Car className="w-4 h-4" />
                                     </div>
                                   )}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-bold text-white text-xs truncate max-w-[200px]">
+                                  <p className="font-semibold text-white text-xs truncate max-w-[190px]">
                                     {w.auction?.title || veh?.title || `Lot #${w.auction_id}`}
                                   </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-black/60 border border-white/15 text-slate-300">
-                                      {veh?.license_plate || 'PLAT-UNIT'}
-                                    </span>
-                                  </div>
+                                  <span className="font-mono text-[11px] text-slate-400">
+                                    {veh?.license_plate || '-'}
+                                  </span>
                                 </div>
                               </div>
                             </td>
 
                             {/* Pemenang */}
-                            <td className="py-3.5 px-4">
-                              <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-xs font-bold text-white shadow-md shrink-0">
-                                  {w.winner?.name ? w.winner.name.charAt(0).toUpperCase() : 'W'}
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="font-bold text-white text-xs truncate">
-                                    {w.winner?.name || 'Peserta Lelang'}
-                                  </p>
-                                  <p className="text-[11px] text-slate-400 truncate">
-                                    {w.winner?.email || `ID #${w.winner_id}`}
-                                  </p>
-                                </div>
-                              </div>
+                            <td className="py-3 px-4">
+                              <p className="font-semibold text-white">{w.winner?.name || 'Peserta'}</p>
+                              <p className="text-[11px] text-slate-400">{w.winner?.email || '-'}</p>
                             </td>
 
-                            {/* Harga Final */}
-                            <td className="py-3.5 px-4 text-right">
-                              <span className="font-display font-black text-sm text-[#d4f728] tracking-tight">
+                            {/* Harga Menang */}
+                            <td className="py-3 px-4 text-right">
+                              <span className="font-bold text-white text-xs">
                                 {formatRupiah(w.final_price)}
                               </span>
                             </td>
 
                             {/* Status Pembayaran */}
-                            <td className="py-3.5 px-4">
-                              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                            <td className="py-3 px-4">
+                              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                                 isPaid
-                                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                                  : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse'
+                                  ? 'bg-emerald-500/15 text-emerald-400'
+                                  : 'bg-amber-500/15 text-amber-300'
                               }`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-                                {isPaid ? 'LUNAS (PAID)' : 'MENUNGGU PEMBAYARAN'}
+                                {isPaid ? 'Lunas' : 'Menunggu Pelunasan'}
                               </span>
                             </td>
 
-                            {/* Waktu Finalisasi */}
-                            <td className="py-3.5 px-4 text-slate-400 text-[11px]">
+                            {/* Tanggal Selesai */}
+                            <td className="py-3 px-4 text-slate-400 text-xs">
                               {w.finalized_at ? (
-                                <div>
-                                  <p className="text-white font-medium">
-                                    {new Date(w.finalized_at).toLocaleDateString('id-ID', {
-                                      day: 'numeric',
-                                      month: 'short',
-                                      year: 'numeric',
-                                    })}
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 font-mono">
-                                    {new Date(w.finalized_at).toLocaleTimeString('id-ID', {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                    })} WIB
-                                  </p>
-                                </div>
-                              ) : (
-                                '-'
-                              )}
+                                new Date(w.finalized_at).toLocaleDateString('id-ID', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                })
+                              ) : '-'}
                             </td>
 
-                            {/* Aksi Konfirmasi */}
-                            <td className="py-3.5 px-5 text-right">
+                            {/* Aksi */}
+                            <td className="py-3 px-4 text-right">
                               {w.status === 'pending_payment' ? (
                                 <button
                                   onClick={async () => {
                                     try {
                                       await api.post(`/admin/winners/${w.id}/status`, { status: 'paid' })
-                                      toast.success('Status pembayaran pemenang berhasil diperbarui menjadi LUNAS!')
+                                      toast.success('Status pembayaran berhasil diubah menjadi LUNAS.')
                                       fetchAdminData()
                                     } catch (err: any) {
-                                      toast.error(err.response?.data?.message || 'Gagal memperbarui status pembayaran.')
+                                      toast.error(err.response?.data?.message || 'Gagal mengubah status.')
                                     }
                                   }}
-                                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:brightness-105 text-slate-950 font-extrabold text-[11px] shadow-md shadow-emerald-500/20 transition-all cursor-pointer inline-flex items-center gap-1.5"
+                                  className="px-3 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors cursor-pointer"
                                 >
-                                  <CheckCircle className="w-3.5 h-3.5" />
-                                  <span>Konfirmasi Lunas</span>
+                                  Konfirmasi Lunas
                                 </button>
                               ) : (
-                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                                  <span>Terverifikasi</span>
+                                <span className="text-xs font-semibold text-emerald-400">
+                                  ✓ Selesai
                                 </span>
                               )}
                             </td>

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
 import { Home } from './pages/Home'
@@ -84,8 +85,9 @@ const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 export function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -183,7 +185,8 @@ export function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-  )
+  </ThemeProvider>
+)
 }
 
 export default App
