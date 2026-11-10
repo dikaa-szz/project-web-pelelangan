@@ -13,7 +13,6 @@ import {
   RefreshCw, 
   Plus, 
   ShieldCheck,
-  Sparkles,
   Image as ImageIcon,
   UploadCloud,
   X,
@@ -642,81 +641,81 @@ export const AdminDashboard: React.FC = () => {
       {/* INPUT KENDARAAN BARU TAB */}
       {currentTab === 'create-vehicle' && (
         <div className="max-w-4xl space-y-6">
-          <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white flex items-center gap-2">
-                <Car className="w-6 h-6 text-[#d4f728]" />
-                Input Unit Kendaraan Baru
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <Car className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                Tambah Data Mobil Baru
               </h2>
-              <p className="text-xs text-[#9e9a90] mt-1">
-                Daftarkan unit konsinyasi ke database. Otomatis lolos verifikasi dan langsung siap dijadwalkan lelang.
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Daftarkan mobil lelang ke database sistem. Mobil yang didaftarkan langsung berstatus siap lelang.
               </p>
             </div>
 
             {/* Quick Presets for Instant Testing */}
-            <div className="flex flex-wrap items-center gap-1.5 bg-[#0a0c10] p-1.5 border border-white/10">
-              <span className="text-[10px] text-[#d4f728] uppercase font-bold flex items-center gap-1 px-2">
-                <Sparkles className="w-3 h-3" /> Preset Contoh:
+            <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 dark:bg-slate-900 p-1.5 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-[11px] text-blue-600 dark:text-blue-400 font-bold px-2">
+                Preset Contoh:
               </span>
               <button
                 type="button"
                 onClick={() => applyPreset('civic')}
-                className="px-2 py-1 bg-white/5 hover:bg-white/15 text-[10px] text-white uppercase font-bold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-2xs"
               >
                 Civic Type R
               </button>
               <button
                 type="button"
                 onClick={() => applyPreset('fortuner')}
-                className="px-2 py-1 bg-white/5 hover:bg-white/15 text-[10px] text-white uppercase font-bold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-2xs"
               >
                 Fortuner GR
               </button>
               <button
                 type="button"
                 onClick={() => applyPreset('ioniq')}
-                className="px-2 py-1 bg-white/5 hover:bg-white/15 text-[10px] text-white uppercase font-bold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-2xs"
               >
                 Ioniq 5 EV
               </button>
               <button
                 type="button"
                 onClick={() => applyPreset('pajero')}
-                className="px-2 py-1 bg-white/5 hover:bg-white/15 text-[10px] text-white uppercase font-bold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-2xs"
               >
                 Pajero Dakar
               </button>
             </div>
           </div>
 
-          <form onSubmit={handleCreateVehicle} className="p-6 sm:p-8 bg-[#0a0c10] border border-white/10 space-y-6">
+          <form onSubmit={handleCreateVehicle} className="p-6 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-xs space-y-6">
             
             {/* Bagian 1: Data Identitas Mobil */}
             <div className="space-y-4">
-              <div className="text-[11px] text-[#d4f728] uppercase font-bold tracking-wider border-b border-white/10 pb-1.5">
-                [ 01 // SPESIFIKASI &amp; IDENTITAS FISIK ]
+              <div className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+                1. Spesifikasi &amp; Identitas Kendaraan
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Judul / Nama Lengkap Unit *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nama / Judul Mobil *</label>
                   <input
                     type="text"
                     required
                     value={vehTitle}
                     onChange={(e) => setVehTitle(e.target.value)}
                     placeholder="Contoh: Honda HR-V 1.5 SE Prestige CVT"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Pabrikan (Brand) *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Merk (Brand) *</label>
                   <select
                     required
                     value={vehBrand}
                     onChange={(e) => setVehBrand(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="Honda">Honda</option>
                     <option value="Toyota">Toyota</option>
@@ -733,19 +732,19 @@ export const AdminDashboard: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Model / Seri *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Model / Seri *</label>
                   <input
                     type="text"
                     required
                     value={vehModel}
                     onChange={(e) => setVehModel(e.target.value)}
                     placeholder="HR-V, Pajero, Zenix"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Tahun Produksi *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tahun Produksi *</label>
                   <input
                     type="number"
                     required
@@ -753,16 +752,16 @@ export const AdminDashboard: React.FC = () => {
                     max={new Date().getFullYear() + 1}
                     value={vehYear}
                     onChange={(e) => setVehYear(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Transmisi *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Transmisi *</label>
                   <select
                     value={vehTransmission}
                     onChange={(e) => setVehTransmission(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="automatic">Automatic (AT / CVT)</option>
                     <option value="manual">Manual (MT)</option>
@@ -770,11 +769,11 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Bahan Bakar *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Bahan Bakar *</label>
                   <select
                     value={vehFuel}
                     onChange={(e) => setVehFuel(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="bensin">Bensin</option>
                     <option value="diesel">Diesel</option>
@@ -786,7 +785,7 @@ export const AdminDashboard: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Odometer (KM) *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Odometer (KM) *</label>
                   <input
                     type="number"
                     required
@@ -794,31 +793,31 @@ export const AdminDashboard: React.FC = () => {
                     value={vehMileage}
                     onChange={(e) => setVehMileage(e.target.value)}
                     placeholder="25000"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Warna Bodi *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Warna Bodi *</label>
                   <input
                     type="text"
                     required
                     value={vehColor}
                     onChange={(e) => setVehColor(e.target.value)}
                     placeholder="Hitam Metalik, Putih Mutiara"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Plat Nomor Polisi *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Plat Nomor Polisi *</label>
                   <input
                     type="text"
                     required
                     value={vehPlate}
                     onChange={(e) => setVehPlate(e.target.value)}
                     placeholder="B 1234 ABC"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white uppercase focus:outline-none focus:border-[#d4f728]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white uppercase focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -826,17 +825,17 @@ export const AdminDashboard: React.FC = () => {
 
             {/* Bagian 2: Legalitas & Konsinyor */}
             <div className="space-y-4 pt-2">
-              <div className="text-[11px] text-[#ff5500] uppercase font-bold tracking-wider border-b border-white/10 pb-1.5">
-                [ 02 // LEGALITAS &amp; KONSINYOR / DEALER ]
+              <div className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+                2. Legalitas &amp; Kepemilikan Unit
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Dealer Konsinyasi</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Dealer / Pemilik</label>
                   <select
                     value={vehSellerId}
                     onChange={(e) => setVehSellerId(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="">-- AutoBid Pusat --</option>
                     {sellerUsers.map((s: any) => (
@@ -848,35 +847,35 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Nomor Rangka (VIN)</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nomor Rangka (VIN)</label>
                   <input
                     type="text"
                     value={vehVin}
                     onChange={(e) => setVehVin(e.target.value)}
-                    placeholder="MHK123456789..."
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white uppercase focus:outline-none focus:border-[#ff5500]"
+                    placeholder="Otomatis jika kosong"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white uppercase focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Nomor Mesin</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nomor Mesin</label>
                   <input
                     type="text"
                     value={vehEngine}
                     onChange={(e) => setVehEngine(e.target.value)}
-                    placeholder="ENG-998822"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white uppercase focus:outline-none focus:border-[#ff5500]"
+                    placeholder="Otomatis jika kosong"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white uppercase focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Nomor BPKB</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nomor BPKB</label>
                   <input
                     type="text"
                     value={vehBpkb}
                     onChange={(e) => setVehBpkb(e.target.value)}
-                    placeholder="L-0918273"
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white uppercase focus:outline-none focus:border-[#ff5500]"
+                    placeholder="Otomatis jika kosong"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white uppercase focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -884,17 +883,17 @@ export const AdminDashboard: React.FC = () => {
 
             {/* Bagian 3: Audit 175 Titik & Grade */}
             <div className="space-y-4 pt-2">
-              <div className="text-[11px] text-[#e5a93c] uppercase font-bold tracking-wider border-b border-white/10 pb-1.5">
-                [ 03 // HASIL AUDIT 175 TITIK &amp; SERTIFIKASI ]
+              <div className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+                3. Hasil Audit 175 Titik &amp; Sertifikasi
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Grade Kondisi *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Grade Kondisi *</label>
                   <select
                     value={vehGrade}
                     onChange={(e) => setVehGrade(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#e5a93c]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="A">Grade A (Koleksi / Istimewa - Nilai 90-100)</option>
                     <option value="B">Grade B (Bagus Terawat - Nilai 80-89)</option>
@@ -904,49 +903,49 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Skor Inspeksi (0 - 100) *</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Skor Inspeksi (0 - 100) *</label>
                   <input
                     type="number"
                     min="50"
                     max="100"
                     value={vehScore}
                     onChange={(e) => setVehScore(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#e5a93c]"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
 
               {/* Foto Kendaraan (Upload Perangkat / URL) */}
               <div className="space-y-3 pt-2">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
-                  <label className="text-[11px] uppercase tracking-wider text-[#9e9a90] flex items-center gap-1.5 font-bold">
-                    <ImageIcon className="w-3.5 h-3.5 text-[#d4f728]" /> Foto Galeri Kendaraan *
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <ImageIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" /> Foto Galeri Kendaraan *
                   </label>
                   
                   {/* Mode Selector Toggle */}
-                  <div className="flex items-center gap-1 bg-[#060709] p-1 border border-white/10 text-[10px]">
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
                     <button
                       type="button"
                       onClick={() => setPhotoMode('upload')}
-                      className={`px-2.5 py-1 uppercase font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`px-3 py-1 rounded-md font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
                         photoMode === 'upload'
-                          ? 'bg-[#d4f728] text-black'
-                          : 'text-[#9e9a90] hover:text-white'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
-                      <UploadCloud className="w-3 h-3" />
+                      <UploadCloud className="w-3.5 h-3.5" />
                       Upload dari Perangkat
                     </button>
                     <button
                       type="button"
                       onClick={() => setPhotoMode('url')}
-                      className={`px-2.5 py-1 uppercase font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                      className={`px-3 py-1 rounded-md font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
                         photoMode === 'url'
-                          ? 'bg-[#d4f728] text-black'
-                          : 'text-[#9e9a90] hover:text-white'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
-                      <LinkIcon className="w-3 h-3" />
+                      <LinkIcon className="w-3.5 h-3.5" />
                       Input URL Gambar
                     </button>
                   </div>
@@ -956,10 +955,10 @@ export const AdminDashboard: React.FC = () => {
                 {photoMode === 'upload' && (
                   <div className="space-y-3">
                     {/* File Dropzone Box */}
-                    <label className={`block border-2 border-dashed p-6 text-center transition-colors cursor-pointer ${
+                    <label className={`block border-2 border-dashed rounded-xl p-6 text-center transition-colors cursor-pointer ${
                       isUploading 
-                        ? 'border-[#d4f728] bg-[#d4f728]/5' 
-                        : 'border-white/15 hover:border-[#d4f728] bg-[#060709] hover:bg-white/5'
+                        ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20' 
+                        : 'border-slate-300 dark:border-slate-700 hover:border-blue-500 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50'
                     }`}>
                       <input
                         type="file"
@@ -970,11 +969,11 @@ export const AdminDashboard: React.FC = () => {
                         className="hidden"
                       />
                       <div className="space-y-2">
-                        <UploadCloud className={`w-8 h-8 mx-auto ${isUploading ? 'text-[#d4f728] animate-bounce' : 'text-[#9e9a90]'}`} />
-                        <div className="text-xs text-white font-bold uppercase tracking-wider">
+                        <UploadCloud className={`w-8 h-8 mx-auto ${isUploading ? 'text-blue-500 animate-bounce' : 'text-slate-400'}`} />
+                        <div className="text-xs text-slate-800 dark:text-white font-semibold">
                           {isUploading ? 'Sedang Mengunggah Foto ke Server...' : 'Klik untuk Pilih Foto dari Perangkat Anda'}
                         </div>
-                        <p className="text-[10px] text-[#5e5b54]">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
                           Format didukung: JPG, PNG, WEBP (Bisa pilih beberapa foto sekaligus, Maks 10MB per foto)
                         </p>
                       </div>
@@ -983,27 +982,27 @@ export const AdminDashboard: React.FC = () => {
                     {/* Uploaded Photos Preview Grid */}
                     {uploadedPhotos.length > 0 && (
                       <div className="space-y-2 pt-2">
-                        <div className="text-[10px] text-[#9e9a90] flex items-center justify-between">
-                          <span>TOTAL FOTO TERUNGGAH: <strong className="text-white">{uploadedPhotos.length} Foto</strong></span>
-                          <span className="text-[#d4f728]">*Foto pertama otomatis menjadi foto sampul lelang</span>
+                        <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                          <span>Total Foto: <strong className="text-slate-900 dark:text-white">{uploadedPhotos.length} Foto</strong></span>
+                          <span className="text-blue-600 dark:text-blue-400 text-[11px]">*Foto pertama otomatis menjadi foto sampul lelang</span>
                         </div>
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           {uploadedPhotos.map((url, idx) => (
-                            <div key={idx} className="relative aspect-[4/3] bg-black border border-white/10 group overflow-hidden">
+                            <div key={idx} className="relative aspect-[4/3] rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 group overflow-hidden shadow-sm">
                               <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" />
                               
                               {/* Primary Badge */}
                               {idx === 0 ? (
-                                <div className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-[#d4f728] text-black font-extrabold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-md">
-                                  <Star className="w-2.5 h-2.5 fill-black" />
+                                <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-blue-600 text-white font-bold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-md">
+                                  <Star className="w-2.5 h-2.5 fill-white" />
                                   SAMPUL
                                 </div>
                               ) : (
                                 <button
                                   type="button"
                                   onClick={() => handleSetPrimaryPhoto(idx)}
-                                  className="absolute top-1.5 left-1.5 px-1.5 py-0.5 bg-black/80 hover:bg-[#d4f728] hover:text-black text-[9px] text-[#9e9a90] border border-white/20 uppercase transition-colors cursor-pointer"
+                                  className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/70 hover:bg-blue-600 text-[9px] text-white transition-colors cursor-pointer"
                                 >
                                   Jadikan Sampul
                                 </button>
@@ -1014,7 +1013,7 @@ export const AdminDashboard: React.FC = () => {
                                 type="button"
                                 onClick={() => handleRemovePhoto(idx)}
                                 title="Hapus foto ini"
-                                className="absolute top-1.5 right-1.5 p-1 bg-black/80 hover:bg-rose-600 text-white border border-white/20 transition-colors cursor-pointer"
+                                className="absolute top-1.5 right-1.5 p-1 rounded bg-black/70 hover:bg-rose-600 text-white transition-colors cursor-pointer"
                               >
                                 <X className="w-3 h-3" />
                               </button>
@@ -1022,7 +1021,7 @@ export const AdminDashboard: React.FC = () => {
                           ))}
 
                           {/* Add More Tile */}
-                          <label className="border border-dashed border-white/20 hover:border-[#d4f728] aspect-[4/3] flex flex-col items-center justify-center text-center p-2 cursor-pointer bg-white/5 hover:bg-white/10 transition-colors">
+                          <label className="border border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 aspect-[4/3] rounded-lg flex flex-col items-center justify-center text-center p-2 cursor-pointer bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
                             <input
                               type="file"
                               multiple
@@ -1030,8 +1029,8 @@ export const AdminDashboard: React.FC = () => {
                               onChange={handleFileUpload}
                               className="hidden"
                             />
-                            <Plus className="w-5 h-5 text-[#9e9a90] mb-1" />
-                            <span className="text-[10px] text-white font-bold uppercase">+ Tambah Foto</span>
+                            <Plus className="w-5 h-5 text-slate-400 mb-1" />
+                            <span className="text-[11px] text-slate-700 dark:text-slate-300 font-semibold">+ Tambah Foto</span>
                           </label>
                         </div>
                       </div>
@@ -1047,12 +1046,12 @@ export const AdminDashboard: React.FC = () => {
                       value={vehImageUrl}
                       onChange={(e) => setVehImageUrl(e.target.value)}
                       placeholder="https://images.unsplash.com/... (atau gunakan tombol preset di kanan atas)"
-                      className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                      className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                     />
                     {vehImageUrl && (
-                      <div className="w-40 aspect-[4/3] bg-black border border-white/10 overflow-hidden relative">
+                      <div className="w-40 aspect-[4/3] rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden relative shadow-sm">
                         <img src={vehImageUrl} alt="Pratinjau" className="w-full h-full object-cover" />
-                        <span className="absolute bottom-1 left-1 px-1.5 py-0.2 bg-black/80 text-[9px] text-[#9e9a90]">
+                        <span className="absolute bottom-1 left-1 px-1.5 py-0.2 rounded bg-black/70 text-[9px] text-slate-300">
                           Pratinjau URL
                         </span>
                       </div>
@@ -1063,26 +1062,26 @@ export const AdminDashboard: React.FC = () => {
 
               {/* Deskripsi */}
               <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Deskripsi &amp; Catatan Khusus Unit</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Deskripsi &amp; Catatan Khusus Unit</label>
                 <textarea
                   rows={3}
                   value={vehDesc}
                   onChange={(e) => setVehDesc(e.target.value)}
                   placeholder="Catatan servis berkala, riwayat kepemilikan tangan pertama, aksesoris tambahan..."
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#ff5500]"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                 ></textarea>
               </div>
             </div>
 
             {/* Submit Button */}
-            <div className="pt-4 border-t border-white/10">
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
               <button
                 type="submit"
                 disabled={isSubmittingVeh}
-                className="w-full py-3.5 bg-[#d4f728] hover:bg-[#c3e622] disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(212,247,40,0.25)]"
+                className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold text-xs tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 <Plus className="w-4 h-4" />
-                {isSubmittingVeh ? 'MENYIMPAN KE DATABASE...' : 'DAFTARKAN UNIT KE DATABASE & TERBITKAN AUDIT'}
+                {isSubmittingVeh ? 'Menyimpan ke Database...' : 'Daftarkan Mobil ke Database Lelang'}
               </button>
             </div>
           </form>
@@ -1092,52 +1091,52 @@ export const AdminDashboard: React.FC = () => {
       {/* Approvals Tab */}
       {currentTab === 'approvals' && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
-              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Verifikasi Unit Konsinyasi Masuk
               </h2>
-              <p className="text-xs text-[#9e9a90] mt-1">
-                Tinjau kelengkapan inspeksi 175 titik, bebas banjir, dan legalitas BPKB sebelum disetujui.
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Tinjau kelengkapan inspeksi 175 titik, bebas banjir, dan legalitas BPKB sebelum disetujui masuk lelang.
               </p>
             </div>
-            <span className="text-xs font-bold px-3 py-1 bg-[#e5a93c] text-black uppercase">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 self-start sm:self-auto">
               {pendingVehicles.length} Menunggu Persetujuan
             </span>
           </div>
 
           {pendingVehicles.length === 0 ? (
-            <div className="p-16 text-center bg-[#0a0c10] border border-dashed border-white/10 space-y-2">
-              <CheckCircle2 className="w-10 h-10 text-[#d4f728] mx-auto" />
-              <p className="text-sm font-bold uppercase text-white">Semua unit telah diverifikasi</p>
-              <p className="text-xs text-[#9e9a90]">Tidak ada unit konsinyasi yang menunggu persetujuan.</p>
+            <div className="p-16 text-center rounded-xl bg-white dark:bg-[#0f172a] border border-dashed border-slate-300 dark:border-slate-800 space-y-2 shadow-sm">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
+              <p className="text-sm font-semibold text-slate-800 dark:text-white">Semua unit telah diverifikasi</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Tidak ada unit konsinyasi yang menunggu persetujuan saat ini.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {pendingVehicles.map((veh) => (
-                <div key={veh.id} className="p-6 bg-[#0a0c10] border border-white/10 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+                <div key={veh.id} className="p-5 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row gap-5 justify-between items-start md:items-center shadow-sm">
                   <div className="flex gap-4">
-                    <div className="w-24 h-20 bg-black border border-white/10 shrink-0 overflow-hidden">
+                    <div className="w-24 h-20 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden">
                       <img
                         src={getVehicleImageUrl(veh)}
                         onError={handleImageError}
                         alt={veh.title}
-                        className="w-full h-full object-cover grayscale"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="px-1.5 py-0.2 bg-[#d4f728] text-black text-[9px] font-black uppercase">
+                        <span className="px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase">
                           GRADE {veh.condition_grade}
                         </span>
-                        <span className="text-[10px] text-[#5e5b54]">LOT #{veh.id.toString().padStart(4, '0')}</span>
+                        <span className="text-[11px] font-mono text-slate-400">LOT #{veh.id.toString().padStart(4, '0')}</span>
                       </div>
-                      <h4 className="font-display font-bold text-base text-white uppercase">{veh.title}</h4>
-                      <p className="text-xs text-[#9e9a90]">
-                        Dealer: <strong className="text-white">{veh.seller?.name}</strong> • Nopol: {veh.license_plate} • Odo: {veh.mileage?.toLocaleString('id-ID')} KM
+                      <h4 className="font-bold text-sm text-slate-900 dark:text-white">{veh.title}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        Penjual: <strong className="text-slate-700 dark:text-slate-200">{veh.seller?.name || 'AutoBid'}</strong> • Nopol: {veh.license_plate} • Odo: {veh.mileage?.toLocaleString('id-ID')} KM
                       </p>
                       {veh.inspection && (
-                        <div className="flex items-center gap-3 pt-1 text-[11px] text-[#d4f728]">
+                        <div className="flex items-center gap-3 pt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                           <span>Skor Audit: {veh.inspection.overall_score}/100</span>
                           <span>•</span>
                           <span>Bebas Banjir: {!veh.inspection.flood_history ? 'YA' : 'TIDAK'}</span>
@@ -1151,7 +1150,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex items-center gap-3 self-end md:self-center">
                     <button
                       onClick={() => handleApprove(veh.id)}
-                      className="px-6 py-2.5 bg-[#d4f728] hover:bg-[#c3e622] text-black font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                      className="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors cursor-pointer shadow-sm"
                     >
                       Setujui Masuk Katalog
                     </button>
@@ -1166,57 +1165,57 @@ export const AdminDashboard: React.FC = () => {
       {/* Auctions Management Tab */}
       {currentTab === 'auctions' && (
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
-              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Kontrol Sesi Lelang &amp; Intervensi
               </h2>
-              <p className="text-xs text-[#9e9a90] mt-1">
-                Monitor real-time tawaran masuk dan finalisasi pemenang lelang manual.
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Monitor tawaran masuk secara real-time dan kelola status sesi lelang aktif atau terjadwal.
               </p>
             </div>
             <button
               onClick={() => setCurrentTab('create-auction')}
-              className="px-4 py-2 bg-[#ff5500] hover:bg-[#ff6a1f] text-black font-bold text-xs uppercase flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+              className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-2 cursor-pointer self-start sm:self-auto shadow-sm"
             >
-              <Plus className="w-3.5 h-3.5" />
-              + Jadwalkan Sesi Baru
+              <Plus className="w-4 h-4" />
+              <span>Jadwalkan Sesi Baru</span>
             </button>
           </div>
 
           {/* Active Live Auctions Section */}
-          <div className="bg-[#0a0c10] border border-white/10">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#08090b]">
-              <span className="text-xs font-bold text-white uppercase flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#ff5500] animate-ping"></span>
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60">
+              <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                 Daftar Sesi Lelang Aktif (Live &amp; Extended)
               </span>
-              <span className="text-[11px] text-[#9e9a90]">{liveAuctions.length} Sesi Terdeteksi</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{liveAuctions.length} Sesi Aktif</span>
             </div>
 
             {liveAuctions.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#5e5b54] uppercase tracking-wider">
+              <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">
                 Saat ini tidak ada sesi lelang yang sedang live.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+                  <thead className="text-[11px] uppercase bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
                     <tr>
-                      <th className="py-3 px-4">ID LOT &amp; UNIT</th>
-                      <th className="py-3 px-4">HARGA DASAR</th>
-                      <th className="py-3 px-4">TAWARAN TERTINGGI</th>
-                      <th className="py-3 px-4">TOTAL TIKET</th>
-                      <th className="py-3 px-4">DEADLINE</th>
-                      <th className="py-3 px-4 text-right">AKSI KONSOL</th>
+                      <th className="py-3 px-4">Mobil &amp; Lot</th>
+                      <th className="py-3 px-4">Harga Dasar</th>
+                      <th className="py-3 px-4">Tawaran Tertinggi</th>
+                      <th className="py-3 px-4">Total Bid</th>
+                      <th className="py-3 px-4">Batas Waktu</th>
+                      <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                     {liveAuctions.map((auc) => (
-                      <tr key={auc.id} className="hover:bg-white/5 transition-colors">
+                      <tr key={auc.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-9 bg-black border border-white/10 shrink-0 overflow-hidden">
+                            <div className="w-12 h-9 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden">
                               <img
                                 src={getVehicleImageUrl(auc.vehicle)}
                                 onError={handleImageError}
@@ -1225,17 +1224,17 @@ export const AdminDashboard: React.FC = () => {
                               />
                             </div>
                             <div>
-                              <p className="font-bold text-white uppercase">{auc.title}</p>
-                              <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                              <p className="font-semibold text-slate-900 dark:text-white">{auc.title}</p>
+                              <p className="text-[11px] font-mono text-slate-400">LOT #{auc.id.toString().padStart(4, '0')}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#9e9a90]">{formatRupiah(auc.start_price)}</td>
-                        <td className="py-3 px-4 text-[#ff5500] font-bold text-sm">
+                        <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{formatRupiah(auc.start_price)}</td>
+                        <td className="py-3 px-4 text-blue-600 dark:text-blue-400 font-bold text-sm">
                           {formatRupiah(auc.current_price)}
                         </td>
-                        <td className="py-3 px-4">{auc.total_bids} Bids</td>
-                        <td className="py-3 px-4 text-[#e2dfd8]">
+                        <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{auc.total_bids} Bids</td>
+                        <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
                           {new Date(auc.end_time).toLocaleTimeString('id-ID')}
                         </td>
                         <td className="py-3 px-4 text-right">
@@ -1244,7 +1243,7 @@ export const AdminDashboard: React.FC = () => {
                               href={`/auction/${auc.id}/live`}
                               target="_blank"
                               rel="noreferrer"
-                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold uppercase inline-flex items-center gap-1 transition-colors"
+                              className="px-2.5 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors"
                               title="Buka Terminal Live"
                             >
                               <ExternalLink className="w-3 h-3" />
@@ -1252,7 +1251,7 @@ export const AdminDashboard: React.FC = () => {
                             </a>
                             <button
                               onClick={() => handleFinalize(auc.id)}
-                              className="px-3 py-1.5 bg-[#e2dfd8] hover:bg-white text-black font-bold text-[11px] uppercase cursor-pointer"
+                              className="px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs transition-colors cursor-pointer shadow-sm"
                             >
                               Finalisasi Pemenang
                             </button>
@@ -1267,37 +1266,37 @@ export const AdminDashboard: React.FC = () => {
           </div>
 
           {/* Scheduled Auctions Section */}
-          <div className="bg-[#0a0c10] border border-white/10">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#08090b]">
-              <span className="text-xs font-bold text-white uppercase flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-[#e5a93c]" />
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60">
+              <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-amber-500" />
                 Daftar Sesi Lelang Terjadwal (Menunggu Waktu Mulai)
               </span>
-              <span className="text-[11px] text-[#9e9a90]">{scheduledAuctions.length} Sesi Terjadwal</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{scheduledAuctions.length} Sesi Terjadwal</span>
             </div>
 
             {scheduledAuctions.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#5e5b54] uppercase tracking-wider">
+              <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">
                 Tidak ada sesi lelang terjadwal. Klik &quot;+ Jadwalkan Sesi Baru&quot; di atas untuk membuka lelang kendaraan.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+                  <thead className="text-[11px] uppercase bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
                     <tr>
-                      <th className="py-3 px-4">ID LOT &amp; UNIT</th>
-                      <th className="py-3 px-4">HARGA DASAR</th>
-                      <th className="py-3 px-4">WAKTU MULAI</th>
-                      <th className="py-3 px-4">DEADLINE SELESAI</th>
-                      <th className="py-3 px-4 text-right">AKSI KONSOL</th>
+                      <th className="py-3 px-4">Mobil &amp; Lot</th>
+                      <th className="py-3 px-4">Harga Dasar</th>
+                      <th className="py-3 px-4">Waktu Mulai</th>
+                      <th className="py-3 px-4">Waktu Selesai</th>
+                      <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                     {scheduledAuctions.map((auc) => (
-                      <tr key={auc.id} className="hover:bg-white/5 transition-colors">
+                      <tr key={auc.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-9 bg-black border border-white/10 shrink-0 overflow-hidden">
+                            <div className="w-12 h-9 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden">
                               <img
                                 src={getVehicleImageUrl(auc.vehicle)}
                                 onError={handleImageError}
@@ -1306,16 +1305,16 @@ export const AdminDashboard: React.FC = () => {
                               />
                             </div>
                             <div>
-                              <p className="font-bold text-white uppercase">{auc.title}</p>
-                              <p className="text-[10px] text-[#5e5b54]">LOT #{auc.id.toString().padStart(4, '0')}</p>
+                              <p className="font-semibold text-slate-900 dark:text-white">{auc.title}</p>
+                              <p className="text-[11px] font-mono text-slate-400">LOT #{auc.id.toString().padStart(4, '0')}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-[#ff5500] font-bold">{formatRupiah(auc.start_price)}</td>
-                        <td className="py-3 px-4 text-[#e5a93c] font-semibold">
+                        <td className="py-3 px-4 text-blue-600 dark:text-blue-400 font-semibold">{formatRupiah(auc.start_price)}</td>
+                        <td className="py-3 px-4 text-amber-600 dark:text-amber-400 font-medium">
                           {new Date(auc.start_time).toLocaleString('id-ID')}
                         </td>
-                        <td className="py-3 px-4 text-[#9e9a90]">
+                        <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
                           {new Date(auc.end_time).toLocaleString('id-ID')}
                         </td>
                         <td className="py-3 px-4 text-right">
@@ -1324,7 +1323,7 @@ export const AdminDashboard: React.FC = () => {
                               href={`/auction/${auc.id}/live`}
                               target="_blank"
                               rel="noreferrer"
-                              className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-[#9e9a90] hover:text-white text-[11px] font-bold uppercase inline-flex items-center gap-1 transition-colors"
+                              className="px-2.5 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold inline-flex items-center gap-1 transition-colors"
                               title="Lihat Ruang Tunggu"
                             >
                               <ExternalLink className="w-3 h-3" />
@@ -1332,11 +1331,11 @@ export const AdminDashboard: React.FC = () => {
                             </a>
                             <button
                               onClick={() => handleStartAuction(auc.id)}
-                              className="px-3 py-1.5 bg-[#d4f728] hover:bg-[#c3e622] text-black font-bold text-[11px] uppercase flex items-center gap-1 cursor-pointer transition-colors shadow-[0_0_12px_rgba(212,247,40,0.25)]"
+                              className="px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-1 cursor-pointer transition-colors shadow-sm"
                               title="Aktifkan sesi ini sekarang secara instan"
                             >
                               <Play className="w-3 h-3 fill-current" />
-                              Mulai Live Sekarang
+                              Mulai Live
                             </button>
                           </div>
                         </td>
@@ -1352,20 +1351,20 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Create Auction Form Tab */}
       {currentTab === 'create-auction' && (
-        <div className="max-w-2xl space-y-6">
-          <div className="border-b border-white/10 pb-4">
-            <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+        <div className="max-w-2xl space-y-5">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
               Jadwalkan Sesi Lelang Baru
             </h2>
-            <p className="text-xs text-[#9e9a90] mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Pilih dari unit kendaraan yang telah disetujui (Approved) untuk dibuka ke bursa lelang.
             </p>
           </div>
 
-          <form onSubmit={handleCreateAuction} className="p-6 bg-[#0a0c10] border border-white/10 space-y-4">
+          <form onSubmit={handleCreateAuction} className="p-6 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="space-y-1.5">
-              <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">
-                Pilih Kendaraan (Lolos Audit)
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Pilih Kendaraan (Siap Lelang)
               </label>
               <select
                 required
@@ -1377,7 +1376,7 @@ export const AdminDashboard: React.FC = () => {
                     setAuctionTitle(`Lelang ${found.brand} ${found.model} (${found.year})`)
                   }
                 }}
-                className="w-full px-3 py-2.5 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                className="w-full px-3 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
               >
                 <option value="">-- Pilih Unit Tersedia --</option>
                 {approvedVehicles.map((v) => (
@@ -1389,63 +1388,63 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Judul Sesi Lelang</label>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Judul Sesi Lelang</label>
               <input
                 type="text"
                 required
                 value={auctionTitle}
                 onChange={(e) => setAuctionTitle(e.target.value)}
                 placeholder="Contoh: Lelang Honda HR-V E Special Edition"
-                className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Harga Pembukaan (Rp)</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Harga Pembukaan (Rp)</label>
                 <input
                   type="number"
                   required
                   value={startPrice}
                   onChange={(e) => setStartPrice(e.target.value)}
                   placeholder="200000000"
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Kelipatan Penawaran (Rp)</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Kelipatan Penawaran (Rp)</label>
                 <input
                   type="number"
                   required
                   value={bidIncrement}
                   onChange={(e) => setBidIncrement(e.target.value)}
                   placeholder="500000"
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Waktu Mulai</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Waktu Mulai</label>
                 <input
                   type="datetime-local"
                   required
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-[#9e9a90]">Waktu Selesai</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Waktu Selesai</label>
                 <input
                   type="datetime-local"
                   required
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#060709] border border-white/10 text-xs text-white focus:outline-none focus:border-[#d4f728]"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -1454,7 +1453,7 @@ export const AdminDashboard: React.FC = () => {
               <button
                 type="submit"
                 disabled={isCreatingAuction}
-                className="w-full py-3 bg-[#d4f728] hover:bg-[#c3e622] text-black font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold text-xs tracking-wider transition-colors cursor-pointer shadow-sm"
               >
                 {isCreatingAuction ? 'Menjadwalkan...' : 'Publish Sesi Lelang'}
               </button>
@@ -1478,17 +1477,17 @@ export const AdminDashboard: React.FC = () => {
         return (
           <div className="space-y-5">
             {/* Header Bersih & Rapi */}
-            <div className="p-5 rounded-xl bg-[#0f172a] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-5 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
               <div>
                 <div className="flex items-center gap-2.5">
-                  <h2 className="text-lg font-bold text-white tracking-tight">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                     Daftar Mobil Lelang
                   </h2>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                     {allVehicles.length} Mobil
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Kelola data seluruh kendaraan yang didaftarkan untuk proses lelang.
                 </p>
               </div>
@@ -1503,7 +1502,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Filter & Search Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-xl bg-[#0f172a] border border-slate-800">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -1511,16 +1510,16 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="Cari nama mobil, merk, model, atau nomor plat..."
                   value={vehicleSearch}
                   onChange={(e) => setVehicleSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-400 hidden sm:inline">Status:</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">Status:</span>
                 <select
                   value={vehicleStatusFilter}
                   onChange={(e) => setVehicleStatusFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
+                  className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-500"
                 >
                   <option value="all">Semua Status</option>
                   <option value="approved">Siap Lelang (Approved)</option>
@@ -1532,10 +1531,10 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Tabel Mobil Bersih & Teratur */}
-            <div className="rounded-xl border border-slate-800 bg-[#0f172a] overflow-hidden shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-900/80 text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-800">
+                  <thead className="bg-slate-50 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-200 dark:border-slate-800">
                     <tr>
                       <th className="py-3 px-4">Mobil &amp; Plat</th>
                       <th className="py-3 px-4">Spesifikasi</th>
@@ -1545,12 +1544,12 @@ export const AdminDashboard: React.FC = () => {
                       <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/80">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
                     {filteredVehicles.length === 0 ? (
                       <tr>
                         <td colSpan={6} className="py-12 text-center text-slate-500">
                           <Car className="w-8 h-8 mx-auto mb-2 opacity-30 text-slate-400" />
-                          <p className="font-semibold text-slate-400">Tidak ada mobil yang sesuai pencarian.</p>
+                          <p className="font-semibold text-slate-500 dark:text-slate-400">Tidak ada mobil yang sesuai pencarian.</p>
                         </td>
                       </tr>
                     ) : (
@@ -1562,11 +1561,11 @@ export const AdminDashboard: React.FC = () => {
                         const isPending = v.status === 'pending_approval'
 
                         return (
-                          <tr key={v.id} className="hover:bg-slate-800/40 transition-colors">
+                          <tr key={v.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                             {/* Mobil & Foto */}
                             <td className="py-3 px-4">
                               <div className="flex items-center gap-3">
-                                <div className="w-12 h-10 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
+                                <div className="w-12 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
                                   {imgUrl ? (
                                     <img
                                       src={imgUrl}
@@ -1575,16 +1574,16 @@ export const AdminDashboard: React.FC = () => {
                                       className="w-full h-full object-cover"
                                     />
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-600">
+                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
                                       <Car className="w-4 h-4" />
                                     </div>
                                   )}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-semibold text-white text-xs truncate max-w-[200px]">
+                                  <p className="font-semibold text-slate-900 dark:text-white text-xs truncate max-w-[200px]">
                                     {v.title}
                                   </p>
-                                  <span className="inline-block mt-0.5 font-mono text-[11px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
+                                  <span className="inline-block mt-0.5 font-mono text-[11px] px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                                     {v.license_plate || '-'}
                                   </span>
                                 </div>
@@ -1592,16 +1591,16 @@ export const AdminDashboard: React.FC = () => {
                             </td>
 
                             {/* Spesifikasi */}
-                            <td className="py-3 px-4 text-slate-300">
-                              <p className="font-medium text-white">{v.brand} {v.model}</p>
-                              <p className="text-[11px] text-slate-400 capitalize">
+                            <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
+                              <p className="font-medium text-slate-900 dark:text-white">{v.brand} {v.model}</p>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 capitalize">
                                 {v.year} • {v.transmission} • {v.fuel_type}
                               </p>
                             </td>
 
                             {/* Kondisi */}
                             <td className="py-3 px-4">
-                              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-200">
+                              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
                                 Grade {v.condition_grade || 'A'}
                               </span>
                             </td>
@@ -1610,14 +1609,14 @@ export const AdminDashboard: React.FC = () => {
                             <td className="py-3 px-4">
                               <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
                                 isApproved
-                                  ? 'bg-emerald-500/15 text-emerald-400'
+                                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
                                   : isInAuction
-                                  ? 'bg-blue-500/15 text-blue-400'
+                                  ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400'
                                   : isSold
-                                  ? 'bg-slate-700 text-slate-300'
+                                  ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                                   : isPending
-                                  ? 'bg-amber-500/15 text-amber-400'
-                                  : 'bg-slate-800 text-slate-400'
+                                  ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                               }`}>
                                 {v.status === 'approved' ? 'Siap Lelang' :
                                  v.status === 'in_auction' ? 'Sedang Lelang' :
@@ -1627,7 +1626,7 @@ export const AdminDashboard: React.FC = () => {
                             </td>
 
                             {/* Penjual */}
-                            <td className="py-3 px-4 text-slate-300">
+                            <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
                               {v.seller?.name || 'AutoBid Pusat'}
                             </td>
 
@@ -1644,7 +1643,7 @@ export const AdminDashboard: React.FC = () => {
                                     toast.error(err.response?.data?.message || 'Gagal menghapus data mobil.')
                                   }
                                 }}
-                                className="px-2.5 py-1 rounded-md text-xs font-medium text-rose-400 hover:bg-rose-500/15 transition-colors cursor-pointer"
+                                className="px-2.5 py-1 rounded-md text-xs font-medium text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                               >
                                 Hapus
                               </button>
@@ -1678,24 +1677,24 @@ export const AdminDashboard: React.FC = () => {
         return (
           <div className="space-y-5">
             {/* Header Bersih */}
-            <div className="p-5 rounded-xl bg-[#0f172a] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-5 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
               <div>
                 <div className="flex items-center gap-2.5">
-                  <h2 className="text-lg font-bold text-white tracking-tight">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                     Data Pemenang Lelang
                   </h2>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/20">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/20">
                     {winners.length} Pemenang
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Daftar pemenang sesi lelang beserta status verifikasi pelunasan transaksi.
                 </p>
               </div>
             </div>
 
             {/* Search Bar */}
-            <div className="p-3 rounded-xl bg-[#0f172a] border border-slate-800">
+            <div className="p-3 rounded-xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -1703,16 +1702,16 @@ export const AdminDashboard: React.FC = () => {
                   placeholder="Cari nama pemenang, email, mobil lelang, atau plat nomor..."
                   value={winnerSearch}
                   onChange={(e) => setWinnerSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
             </div>
 
             {/* Tabel Pemenang Bersih */}
-            <div className="rounded-xl border border-slate-800 bg-[#0f172a] overflow-hidden shadow-sm">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-900/80 text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-800">
+                  <thead className="bg-slate-50 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400 uppercase text-[11px] font-semibold tracking-wider border-b border-slate-200 dark:border-slate-800">
                     <tr>
                       <th className="py-3 px-4">Mobil Lelang</th>
                       <th className="py-3 px-4">Pemenang</th>
@@ -1722,12 +1721,12 @@ export const AdminDashboard: React.FC = () => {
                       <th className="py-3 px-4 text-right">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/80">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
                     {filteredWinners.length === 0 ? (
                       <tr>
                         <td colSpan={6} className="py-12 text-center text-slate-500">
                           <Trophy className="w-8 h-8 mx-auto mb-2 opacity-30 text-amber-400" />
-                          <p className="font-semibold text-slate-400">Belum ada pemenang lelang tercatat.</p>
+                          <p className="font-semibold text-slate-500 dark:text-slate-400">Belum ada pemenang lelang tercatat.</p>
                         </td>
                       </tr>
                     ) : (
@@ -1737,11 +1736,11 @@ export const AdminDashboard: React.FC = () => {
                         const isPaid = w.status === 'paid'
 
                         return (
-                          <tr key={w.id} className="hover:bg-slate-800/40 transition-colors">
+                          <tr key={w.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                             {/* Mobil Lelang */}
                             <td className="py-3 px-4">
                               <div className="flex items-center gap-3">
-                                <div className="w-12 h-10 rounded-lg bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
+                                <div className="w-12 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shrink-0">
                                   {imgUrl ? (
                                     <img
                                       src={imgUrl}
@@ -1750,13 +1749,13 @@ export const AdminDashboard: React.FC = () => {
                                       className="w-full h-full object-cover"
                                     />
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-600">
+                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
                                       <Car className="w-4 h-4" />
                                     </div>
                                   )}
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="font-semibold text-white text-xs truncate max-w-[190px]">
+                                  <p className="font-semibold text-slate-900 dark:text-white text-xs truncate max-w-[190px]">
                                     {w.auction?.title || veh?.title || `Lot #${w.auction_id}`}
                                   </p>
                                   <span className="font-mono text-[11px] text-slate-400">
@@ -1768,13 +1767,13 @@ export const AdminDashboard: React.FC = () => {
 
                             {/* Pemenang */}
                             <td className="py-3 px-4">
-                              <p className="font-semibold text-white">{w.winner?.name || 'Peserta'}</p>
-                              <p className="text-[11px] text-slate-400">{w.winner?.email || '-'}</p>
+                              <p className="font-semibold text-slate-900 dark:text-white">{w.winner?.name || 'Peserta'}</p>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400">{w.winner?.email || '-'}</p>
                             </td>
 
                             {/* Harga Menang */}
                             <td className="py-3 px-4 text-right">
-                              <span className="font-bold text-white text-xs">
+                              <span className="font-bold text-slate-900 dark:text-white text-xs">
                                 {formatRupiah(w.final_price)}
                               </span>
                             </td>
@@ -1783,15 +1782,15 @@ export const AdminDashboard: React.FC = () => {
                             <td className="py-3 px-4">
                               <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                                 isPaid
-                                  ? 'bg-emerald-500/15 text-emerald-400'
-                                  : 'bg-amber-500/15 text-amber-300'
+                                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                                  : 'bg-amber-500/15 text-amber-600 dark:text-amber-300'
                               }`}>
                                 {isPaid ? 'Lunas' : 'Menunggu Pelunasan'}
                               </span>
                             </td>
 
                             {/* Tanggal Selesai */}
-                            <td className="py-3 px-4 text-slate-400 text-xs">
+                            <td className="py-3 px-4 text-slate-500 dark:text-slate-400 text-xs">
                               {w.finalized_at ? (
                                 new Date(w.finalized_at).toLocaleDateString('id-ID', {
                                   day: 'numeric',
@@ -1819,7 +1818,7 @@ export const AdminDashboard: React.FC = () => {
                                   Konfirmasi Lunas
                                 </button>
                               ) : (
-                                <span className="text-xs font-semibold text-emerald-400">
+                                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                                   ✓ Selesai
                                 </span>
                               )}
@@ -1839,60 +1838,60 @@ export const AdminDashboard: React.FC = () => {
       {/* Users & KYC Tab */}
       {currentTab === 'users' && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
-              <h2 className="font-display font-extrabold text-2xl uppercase tracking-tight text-white">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Direktori Pengguna &amp; Saldo Escrow
               </h2>
-              <p className="text-xs text-[#9e9a90] mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Daftar akun terdaftar, status verifikasi kepolisian (KYC), dan deposit jaminan.
               </p>
             </div>
-            <span className="text-xs font-bold text-[#9e9a90] bg-[#0a0c10] border border-white/10 px-3 py-1">
-              TOTAL: {usersList.length} AKUN
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 self-start sm:self-auto">
+              Total: {usersList.length} Akun
             </span>
           </div>
 
-          <div className="bg-[#0a0c10] border border-white/10 overflow-x-auto">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] overflow-x-auto shadow-sm">
             <table className="w-full text-left text-xs">
-              <thead className="text-[10px] uppercase bg-[#060709] text-[#5e5b54] border-b border-white/10">
+              <thead className="text-[11px] uppercase bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
                 <tr>
-                  <th className="py-3 px-4">UID &amp; NAMA</th>
-                  <th className="py-3 px-4">EMAIL</th>
-                  <th className="py-3 px-4">PERAN</th>
-                  <th className="py-3 px-4">STATUS KYC</th>
-                  <th className="py-3 px-4 text-right">SALDO ESCROW</th>
+                  <th className="py-3 px-4">Pengguna</th>
+                  <th className="py-3 px-4">Email</th>
+                  <th className="py-3 px-4">Peran</th>
+                  <th className="py-3 px-4">Status KYC</th>
+                  <th className="py-3 px-4 text-right">Saldo Escrow</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {usersList.map((u: any) => (
-                  <tr key={u.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={u.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="py-3 px-4">
-                      <p className="font-bold text-white">{u.name}</p>
-                      <p className="text-[10px] text-[#5e5b54]">UID #{u.id.toString().padStart(5, '0')}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{u.name}</p>
+                      <p className="text-[10px] font-mono text-slate-400">UID #{u.id.toString().padStart(5, '0')}</p>
                     </td>
-                    <td className="py-3 px-4 text-[#9e9a90]">{u.email}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{u.email}</td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 text-[9px] font-bold uppercase ${
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
                         u.role === 'admin' 
-                          ? 'bg-[#d4f728] text-black' 
+                          ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800' 
                           : u.role === 'seller'
-                          ? 'bg-[#e5a93c] text-black'
-                          : 'bg-white/10 text-[#e2dfd8]'
+                          ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                       }`}>
                         {u.role}
                       </span>
                     </td>
                     <td className="py-3 px-4">
                       {u.kyc_verified_at ? (
-                        <span className="text-[#d4f728] font-bold flex items-center gap-1 text-[11px]">
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 text-xs">
                           <ShieldCheck className="w-3.5 h-3.5" /> Terverifikasi
                         </span>
                       ) : (
-                        <span className="text-[#9e9a90] text-[11px]">Belum Verifikasi</span>
+                        <span className="text-slate-400 text-xs">Belum Verifikasi</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-right font-bold text-white">
+                    <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-white">
                       {formatRupiah(u.deposit_balance)}
                     </td>
                   </tr>

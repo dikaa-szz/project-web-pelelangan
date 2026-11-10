@@ -37,10 +37,10 @@ const LiveRedirect: React.FC = () => {
   }, [navigate])
 
   return (
-    <div className="min-h-screen bg-[#08090b] flex items-center justify-center text-[#9e9a90] font-mono text-xs">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex items-center justify-center text-slate-500 dark:text-slate-400 font-medium text-xs">
       <div className="text-center space-y-3">
-        <div className="w-8 h-8 border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto"></div>
-        <p className="uppercase tracking-widest">[ MENCARI SESI LELANG LIVE AKTIF... ]</p>
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="uppercase tracking-wider">Mencari sesi lelang aktif...</p>
       </div>
     </div>
   )
@@ -55,8 +55,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#08090b] flex items-center justify-center text-[#9e9a90] font-mono text-xs">
-        <div className="w-8 h-8 border-2 border-[#ff5500] border-t-transparent animate-spin mx-auto"></div>
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] flex items-center justify-center text-slate-500 dark:text-slate-400 font-medium text-xs">
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
       </div>
     )
   }
@@ -75,7 +75,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean 
 // Public Layout Wrapper (with Public Navbar & Public Footer)
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-[#08090b] text-[#e2dfd8] flex flex-col font-body selection:bg-[#ff5500] selection:text-black">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 flex flex-col font-body transition-colors duration-200">
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
