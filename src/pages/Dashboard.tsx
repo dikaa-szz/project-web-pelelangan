@@ -44,7 +44,6 @@ export const Dashboard: React.FC = () => {
       console.error('Failed to load user dashboard data', err)
     }
   }
-
   useEffect(() => {
     fetchDashboardData()
 
@@ -88,7 +87,6 @@ export const Dashboard: React.FC = () => {
           return veh
         })
       )
-
       // If dealer owns this car, show celebration toast
       if (e.seller_id === user?.id) {
         toast.success(`🎉 Tawaran baru ${formatRupiah(e.current_price)} masuk pada unit Anda (${e.vehicle_title})!`, {
@@ -97,10 +95,8 @@ export const Dashboard: React.FC = () => {
         })
       }
     })
-
     // Poll every 8 seconds as fallback
     const interval = setInterval(fetchDashboardData, 8000)
-
     return () => {
       clearInterval(interval)
       channel.stopListening('.bid.placed')
